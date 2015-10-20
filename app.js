@@ -70,6 +70,16 @@ wss.on('connection', function connection(ws) {
         }
         setPlayerData(playerData);
         break;
+      case 'chat': 
+        if (registeredPlayers[data.playerName]) {
+          broadcast({
+            type: 'chat',
+            playerName: data.playerName,
+            zombie: registeredPlayers[data.playerName].zombie,
+            text: data.text
+          });
+        }
+        break;
       defaut: 
         break;
     }

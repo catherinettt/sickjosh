@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-var host = window.document.location.host.replace(/:.*/, '');
 var ws = require('../ws-utils');
 var _ = require('underscore');
 
@@ -17,11 +16,11 @@ class Lobby extends React.Component {
       ready: false, 
       registeredPlayers: {}
     }
-    ws.onmessage = this.incomingMsg.bind(this);
+    ws.readyStateReceiver = this.incomingMsg.bind(this);
   }
 
-  incomingMsg (e) {
-    var message = JSON.parse(e.data);
+  incomingMsg (message) {
+    // var message = JSON.parse(e.data);
     if (message.type === 'readyState') {
       this.setState({
         registeredNumber: message.registeredNumber,
@@ -42,7 +41,7 @@ class Lobby extends React.Component {
       return _.map(this.state.registeredPlayers, (player) => {
         var ready = player.ready ? '(ready)' : '';
         return (
-          <div> {player.playerName} {ready} </div>
+          <div key={player.playerName}> {player.playerName} {ready} </div>
         )
       })
     }

@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node webpack-server | node app",
-    "webpack": "webpack webpack.config.js"
+    "build": "./node_modules/webpack/bin/webpack.js",
+    "serve": "node app",
+    "dev": "node webpack"
   },
   "author": "",
   "license": "ISC",

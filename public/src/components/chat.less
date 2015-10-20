@@ -3,10 +3,20 @@
 	left: 0;
 	bottom: 0;
 	right: 0;
+	padding: 10px 0;
 	background: rgba(255, 255, 255, 0.25);
 	.-history {
 		max-height: 5em;
 		overflow-y: scroll;
-		padding-top: 10px;
+	}
+	.-input {
+		display: flex;
+		div {
+			margin: 0 10px;
+		}
+		div:first-child {
+			flex: 1;
+			margin-right: 0;
+		}
 	}
 }

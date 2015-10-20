@@ -60,12 +60,13 @@ class Chat extends React.Component {
         <div className='-history' ref="history">
             {this.renderChat()}
         </div>
-        <div className='row-fluid'>
-            <form className="form-inline">
-              <div className="form-group">
-                <input ref='chatInput' type="text" className="form-control" id="exampleInputAmount" placeholder="Enter message here" />
-              </div>
-            </form>
+        <div className='-input'>
+            <div className="">
+              <input ref='chatInput' className="form-control" id="exampleInputAmount" placeholder="Enter message here" />
+            </div>
+            <div className="">
+              <button className="btn" onClick={this.onChatSend.bind(this)}> Send </button>
+            </div>
         </div>
       </div>
     );

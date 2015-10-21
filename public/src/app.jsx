@@ -18,6 +18,7 @@ var requireAuth = (nextState, replaceState) => {
 React.render((
   <Router>
     <Route path="/" component={require('./components/home')}>
+      <Route path="admin" component={require('./components/admin')} />
     	<Route path="register" component={require('./components/register')} />
     	<IndexRoute component={require('./components/lobby')} onEnter={requireAuth} />
     </Route>

@@ -51,15 +51,13 @@ class Lobby extends React.Component {
     var welcomeText = this.state.ready ? 'You are ready! Let\'s wait for others.' : 'Go hide and get ready!'; 
     return (
       <div className='sj-lobby'> 
-        <h1>JOSH IS SICK...</h1>
-
         <div>Hello {this.state.playerName}! {welcomeText} </div>
 
         <div className='state'>{this.state.readyNumber} / {this.state.registeredNumber}</div>
         <br />
         <button className='btn btn-lrg' onClick={this.onReady.bind(this)}>{readyText}</button>
-        <div>
-          <h2> Players: </h2>
+        <h3> Players: </h3>
+        <div className='-players'> 
           {this.renderPlayers()}
         </div>
       </div>

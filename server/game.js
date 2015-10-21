@@ -1,0 +1,30 @@
+var _ = require('underscore');
+
+var Game = function(wss) {
+	this.wss = wss;
+	this.registeredPlayers = {};
+}
+
+Game.prototype.broadcast = function (data){
+  this.wss.clients.forEach(function each(client) {
+    client.send(JSON.stringify(data));
+  });
+}
+
+Game.prototype.getReadyCount = function() {
+  return _.size(_.filter(this.registeredPlayers, function(player) {
+    return player.ready
+  }));
+}
+
+Game.prototype.setPlayerData = function(playerData) {
+  this.registeredPlayers[playerData.playerName] = playerData;
+  this.broadcast({
+    type: 'readyState',
+    registeredNumber: _.size(this.registeredPlayers),
+    readyNumber: this.getReadyCount(), 
+    registeredPlayers: this.registeredPlayers
+  })
+}
+
+module.exports = Game;

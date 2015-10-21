@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "./node_modules/webpack/bin/webpack.js",
-    "serve": "node app",
+    "serve": "node ./server/app",
     "dev": "node webpack"
   },
   "author": "",

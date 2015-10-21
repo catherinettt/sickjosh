@@ -11,4 +11,6 @@ To serve (port 8888):
 
 To work on React (webpack-hot-web, port 8889) 
 
+Requires port 8888 running.
+
 ```npm run dev``` 

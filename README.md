@@ -9,7 +9,7 @@ Don't forget about ```npm install```
 ```npm run app```
 
 
-### To work on React (webpack-hot-web, port 8889) 
+### To work on React (webpack-hot-web live update, port 8889) 
 
 Requires port 8888 running.
 

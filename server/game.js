@@ -27,4 +27,16 @@ Game.prototype.setPlayerData = function(playerData) {
   })
 }
 
+Game.prototype.removePlayerData = function(playerName) {
+  if (this.registeredPlayers[playerName]) {
+    delete this.registeredPlayers[playerName];
+  }
+  this.broadcast({
+    type: 'readyState',
+    registeredNumber: _.size(this.registeredPlayers),
+    readyNumber: this.getReadyCount(), 
+    registeredPlayers: this.registeredPlayers
+  })
+}
+
 module.exports = Game;

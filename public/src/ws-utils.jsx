@@ -40,13 +40,11 @@ ws.onmessage = function(e){
 }
 
 ws.statusPing = function(){
-	setTimeout(function(){
-		var message = {
-			type: 'status',
-			time: new Date().getTime()
-		}
-		ws.send(JSON.stringify(message));
-	}, 500);
+	var message = {
+		type: 'status',
+		time: new Date().getTime()
+	}
+	ws.send(JSON.stringify(message));
 }
 
 ws.registerPlayer = function(){
@@ -56,9 +54,7 @@ ws.registerPlayer = function(){
 		type: 'register',
 		playerName: user.getUsername()
 	}
-	setTimeout(function(){
-		ws.send(JSON.stringify(message));
-	}, 500);
+	ws.send(JSON.stringify(message));
 }
 
 ws.readyPlayer = function(ready) {
@@ -69,9 +65,7 @@ ws.readyPlayer = function(ready) {
 		ready: ready,
 		playerName: user.getUsername()
 	}
-	setTimeout(function(){
-		ws.send(JSON.stringify(message));
-	}, 500);
+	ws.send(JSON.stringify(message));
 }
 
 ws.sendChat = function(text) {
@@ -82,9 +76,14 @@ ws.sendChat = function(text) {
 		text: text,
 		playerName: user.getUsername()
 	}
-	setTimeout(function(){
-		ws.send(JSON.stringify(message));
-	}, 500);
+	ws.send(JSON.stringify(message));
 }
 
+ws.unregisterPlayer = function(playerName) {
+	var message = {
+		type: 'unregister',
+		playerName: playerName
+	}
+	ws.send(JSON.stringify(message));
+}
 module.exports = ws;

@@ -11,7 +11,9 @@ var requireAuth = (nextState, replaceState) => {
 	if (!Parse.User.current()) {
 		replaceState({ nextPathname: nextState.location.pathname }, '/register');
 	} else {
-		ws.registerPlayer();
+    setTimeout(() => {
+      ws.registerPlayer();
+    }, 500)
 	}
 }
 

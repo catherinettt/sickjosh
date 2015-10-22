@@ -53,19 +53,15 @@ class Lobby extends React.Component {
     var welcomeText = this.state.ready ? 'You are ready! Let\'s wait for others.' : 'Go hide and get ready!'; 
     return (
       <div className='sj-lobby container-fluid'> 
-        <div className='row'>
-          <div className='col-xs-7'>
-            <h5>Hello {this.state.playerName}! </h5>          
-          </div>
-          <div className='col-xs-5'>
-            <div className='pull-right'>
-              <button className='btn btn-lrg btn-default' onClick={this.onReady.bind(this)}>{readyText}</button>
-            </div>
-          </div>
+        <div className='text-center'>
+            <button className='btn btn-lg btn-success' onClick={this.onReady.bind(this)}>{readyText}</button>
         </div>
         <hr />
-        <div className='row'>
-         {this.renderPlayers()}
+        <div className="-players">
+          <h3>Players <span className='pull-right'>{this.state.readyNumber}/{_.size(this.state.registeredPlayers)}</span></h3>
+          <div className='row'>
+           {this.renderPlayers()}
+          </div>
         </div>
       </div>
     );

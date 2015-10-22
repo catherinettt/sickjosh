@@ -7,14 +7,18 @@ var ws = require('../ws-utils');
 require('./register.less');
 
 class Register extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       error: null
     }
   }
 
-  registerPlayer () {
+  registerPlayer (e) {
+    if (e.preventDefault) {
+       e.preventDefault();
+    }
+
     var playerName =  React.findDOMNode(this.refs.playerName).value;
 
     if (!playerName) {
@@ -28,12 +32,12 @@ class Register extends React.Component {
       })
     }
 
-    Parse.User.logIn(playerName, playerName).then(() => {
+    return Parse.User.logIn(playerName, playerName).then(() => {
       ws.registerPlayer();
       if (this.props.location.state && this.props.location.state.nextPathname) {
         this.props.history.replaceState(null, this.props.location.state.nextPathname)
       } else {
-        this.props.history.replaceState(null, '/lobby')
+        this.props.history.replaceState(null, '/')
       }
     }, (e) => {
       this.createParseUser(playerName);
@@ -51,7 +55,7 @@ class Register extends React.Component {
       if (this.props.location.state && this.props.location.state.nextPathname) {
         this.props.history.replaceState(null, this.props.location.state.nextPathname)
       } else {
-        this.props.history.replaceState(null, '/about')
+        this.props.history.replaceState(null, '/')
       }
     });
   }
@@ -66,16 +70,20 @@ class Register extends React.Component {
 
   render() {
     return (
-      <div className='js-register'> 
-        <h2>Player Register</h2>
-        <form className='form-inline'>
+      <div className='js-register container-fluid'> 
+        <h2>Player Registration</h2>
+        <ul>
+          <li>Please use your Hootsuite id</li>
+          <li>Follow the rules</li>
+          <li>Safely first</li>
+        </ul>
+        <form className='form-inline' onSubmit={this.registerPlayer.bind(this)}>
           <div className="form-group">
             <div className="input-group">
               <input ref="playerName" type="text" className="form-control" id="exampleInputAmount" placeholder="josh.gildart" />
               <div className="input-group-addon">@hootsuite.com</div>
             </div>
             </div>
-            <button onClick={this.registerPlayer.bind(this)} className="btn btn-default">Enter</button>
         </form>
         {this.renderError()}
       </div>

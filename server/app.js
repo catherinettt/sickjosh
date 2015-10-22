@@ -34,6 +34,9 @@ wss.on('connection', function connection(ws) {
         }
         game.setPlayerData(playerData);
         break;
+      case 'unregister': 
+        game.removePlayerData(data.playerName);
+        break;
       case 'ready': 
         var playerData = {
           playerName: data.playerName,

@@ -32,11 +32,8 @@ class Chat extends React.Component {
     if (input.value && Parse.User.current()) {
         ws.sendChat(input.value);
     }
-
     input.value = '';
-
-    this.scrollBottomOfChat();
-    
+    return;
   }
 
   scrollBottomOfChat() {
@@ -54,20 +51,28 @@ class Chat extends React.Component {
     }
   }
 
+  renderInput() {
+    if (Parse.User.current()) {
+      return (
+        <form className='-input' onSubmit={this.onChatSend.bind(this)}>
+          <div className="input-group">
+            <input ref='chatInput' type="text" className="form-control" placeholder="Enter message here" />
+            <span className="input-group-btn">
+              <button className="btn btn-default" type="button">Send</button>
+            </span>
+          </div>
+        </form>
+      )
+    }
+  }
+
   render() {
     return (
       <div className='js-chat container-fluid'> 
         <div className='-history' ref="history">
             {this.renderChat()}
         </div>
-        <div className='-input'>
-            <div className="">
-              <input ref='chatInput' className="form-control" id="exampleInputAmount" placeholder="Enter message here" />
-            </div>
-            <div className="">
-              <button className="btn" onClick={this.onChatSend.bind(this)}> Send </button>
-            </div>
-        </div>
+        {this.renderInput()}
       </div>
     );
   }

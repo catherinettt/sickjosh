@@ -6,8 +6,8 @@ var ws = require('../ws-utils');
 import { Router, Route, Link } from 'react-router';
 
 class Status extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
         statusGood: false,
         isPinging: false,
@@ -19,7 +19,10 @@ class Status extends React.Component {
   }
 
   componentDidMount() {
-    ws.statusPing();
+    setTimeout(() => {
+      ws.statusPing();
+    }, 500)
+
     this.setState({
       isPinging: true
     });
@@ -50,8 +53,20 @@ class Status extends React.Component {
     }
   }
 
+  logout() {
+    var playerName = Parse.User.current().getUsername();
+    ws.unregisterPlayer(playerName);
+    Parse.User.logOut();
+    ws.unregisterPlayer();
+    setTimeout(function(){
+      if (this.props.history) {
+        this.props.history.replaceState(null, '/register')
+      }
+    }.bind(this), 500);
+  }
+
   render() {
-    var statusIcon, statusColor;
+    var statusIcon, statusColor, header, logoutBtn;
     if (this.state.isPinging) {
       statusIcon = 'glyphicon glyphicon-hourglass';
       statusColor = '#8a6d3b';
@@ -62,13 +77,23 @@ class Status extends React.Component {
       statusIcon = 'glyphicon glyphicon-question-sign';
       statusColor = '#a94442';
     }
+
+    if (!Parse.User.current()) {
+      header = 'Registration'
+    } else {
+      header = 'Lobby'
+      logoutBtn = (
+        <button type="button" onClick={this.logout.bind(this)} className='btn btn-default navbar-btn pull-right'>Logout</button>
+      )
+    }
     return (
       <nav className="navbar navbar-default">
         <div className="container-fluid">
             <a className="navbar-brand">
-              <span className={statusIcon} style={{'color': statusColor}}></span>
-            </a>
-            <p className='navbar-text'>Lobby | 0/0 infected </p>
+            <span className={statusIcon} style={{'color': statusColor}}></span>
+          </a>
+          <p className='navbar-text pull-left'>{header}</p>
+          {logoutBtn}        
         </div>
       </nav>
     );

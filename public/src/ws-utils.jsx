@@ -1,6 +1,34 @@
 var host = window.document.location.host.replace(/:.*/, '');
 var ws = new WebSocket('ws://' + host + ':8888');
 
+// ws.onopen = function(){
+// 	if (!ws.pingPong) {
+// 		ws.pingPong = setInterval(() => {
+// 			ws.send(JSON.stringify({
+// 				type: 'ping'
+// 			}))
+// 		}, 1000);
+// 	};
+// };
+
+ws.onerror = function() {
+	if (ws.statusReceiver) {
+		ws.statusReceiver({
+			type: 'status',
+			status: false
+		});
+	}
+}
+
+ws.onclose = function() {
+	if (ws.statusReceiver) {
+		ws.statusReceiver({
+			type: 'status',
+			status: false
+		});
+	}
+}
+
 ws.onmessage = function(e){
 	var message = JSON.parse(e.data);
 	if (message.type) {
@@ -9,6 +37,16 @@ ws.onmessage = function(e){
 			ws[func](message);
 		}
 	}
+}
+
+ws.statusPing = function(){
+	setTimeout(function(){
+		var message = {
+			type: 'status',
+			time: new Date().getTime()
+		}
+		ws.send(JSON.stringify(message));
+	}, 500);
 }
 
 ws.registerPlayer = function(){

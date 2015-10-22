@@ -3,6 +3,7 @@
 var React = require('react');
 require('./home.less');
 var Chat = require('./chat');
+var Status = require('./status');
 
 import { Router, Route, Link } from 'react-router';
 
@@ -12,7 +13,8 @@ class Home extends React.Component {
   }
   render() {
     return (
-      <div className='js-home container-fluid'> 
+      <div className='js-home'> 
+        <Status />
         {this.props.children} 
         <Chat />
       </div>

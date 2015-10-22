@@ -39,26 +39,33 @@ class Lobby extends React.Component {
   renderPlayers () {
     if (!_.isEmpty(this.state.registeredPlayers)) {
       return _.map(this.state.registeredPlayers, (player) => {
-        var ready = player.ready ? '(ready)' : '';
+        var ready = player.ready ? 'glyphicon glyphicon-ok' : '';
         return (
-          <div key={player.playerName}> {player.playerName} {ready} </div>
+          <div className='col-xs-6' key={player.playerName}> 
+            <span>{player.playerName}</span> <span style={{'color': '#3c763d'}} className={ready}></span>
+          </div>
         )
       })
     }
   }
   render() {
-    var readyText = this.state.ready ? 'hold on' : 'ready up';
+    var readyText = this.state.ready ? 'Hold On' : 'Ready Up';
     var welcomeText = this.state.ready ? 'You are ready! Let\'s wait for others.' : 'Go hide and get ready!'; 
     return (
-      <div className='sj-lobby'> 
-        <div>Hello {this.state.playerName}! {welcomeText} </div>
-
-        <div className='state'>{this.state.readyNumber} / {this.state.registeredNumber}</div>
-        <br />
-        <button className='btn btn-lrg' onClick={this.onReady.bind(this)}>{readyText}</button>
-        <h3> Players: </h3>
-        <div className='-players'> 
-          {this.renderPlayers()}
+      <div className='sj-lobby container-fluid'> 
+        <div className='row'>
+          <div className='col-xs-7'>
+            <h5>Hello {this.state.playerName}! </h5>          
+          </div>
+          <div className='col-xs-5'>
+            <div className='pull-right'>
+              <button className='btn btn-lrg btn-default' onClick={this.onReady.bind(this)}>{readyText}</button>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <div className='row'>
+         {this.renderPlayers()}
         </div>
       </div>
     );

@@ -20,6 +20,12 @@ wss.on('connection', function connection(ws) {
     console.log('received: %s', message);
     var data = JSON.parse(message);
     switch (data.type) {
+      case 'status': 
+        ws.send(JSON.stringify({
+          type: 'status',
+          status: 'good'
+        }));
+        break;
       case 'register': 
         var playerData = {
           playerName: data.playerName, 

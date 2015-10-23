@@ -5,6 +5,8 @@ var ws = require('../ws-utils');
 
 import { Router, Route, Link } from 'react-router';
 
+require('./status.less');
+
 class Status extends React.Component {
   constructor(props) {
     super(props);
@@ -96,8 +98,8 @@ class Status extends React.Component {
       <nav className="navbar navbar-default">
         <div className="container-fluid">
             <a className="navbar-brand">
-            <span className='glyphicon glyphicon-globe' style={{'color': statusColor}}></span>
-          </a>
+              <span className='glyphicon glyphicon-globe' style={{'color': statusColor}}></span>
+            </a>
           <p className='navbar-text pull-left'>{header}</p>
           {logoutBtn}        
         </div>

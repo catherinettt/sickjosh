@@ -3,6 +3,8 @@ var _ = require('underscore');
 var Game = function(wss) {
 	this.wss = wss;
 	this.registeredPlayers = {};
+  this.countdown = 10000;
+  this.gameDuration = 3000000;
 }
 
 Game.prototype.broadcast = function (data){
@@ -54,6 +56,48 @@ Game.prototype.removePlayerData = function(playerName) {
     readyNumber: this.getReadyCount(), 
     registeredPlayers: this.registeredPlayers
   })
+}
+
+Game.prototype.setInitialZombies = function(initialNumberOfZombies) {
+  if (_.isUndefined(initialNumberOfZombies) || !_.isNumber(initialNumberOfZombies)) {
+    initialNumberOfZombies = 1;
+  }
+
+  var playerNames = _.keys(this.registeredPlayers);
+  while(initialNumberOfZombies > 0) {
+    var randomZombie = Math.floor(Math.random() * playerNames.length);
+    if (!this.registeredPlayers[playerNames[randomZombie]].zombie) {
+      this.registeredPlayers[playerNames[randomZombie]].zombie = true;
+      initialNumberOfZombies--;
+    }
+  }
+
+  this.broadcast({
+    type: 'start',
+    players: this.registeredPlayers
+  });
+}
+
+Game.prototype.resetSurvivors = function() {
+  for(var player in this.registeredPlayers) {
+      player.zombie = false;
+  }
+}
+
+Game.prototype.shouldStartGame = function () {
+  var readyPlayers = this.getReadyCount();
+  return readyPlayers === _.size(this.registeredPlayers);
+}
+
+Game.prototype.startCountdown = function () {
+  this.broadcast({
+    type: 'startCountdown',
+    time: this.countdown
+  });
+
+  setTimeout(function () {
+    this.setInitialZombies();
+  }.bind(this), this.countdown);
 }
 
 module.exports = Game;

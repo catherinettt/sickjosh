@@ -17,6 +17,8 @@ class Lobby extends React.Component {
       registeredPlayers: {}
     }
     ws.readyStateReceiver = this.incomingMsg.bind(this);
+    ws.startReceiver = this.startGame.bind(this);
+    ws.startCountdownReceiver = this.startCountdown.bind(this);
   }
 
   incomingMsg (message) {
@@ -29,6 +31,22 @@ class Lobby extends React.Component {
       });
     }
   }
+
+  startCountdown(message) {
+    //TODO display countdown
+  }
+
+  startGame(message) {
+    var user = Parse.User.current();
+    if (!user) return;
+    var username = user.getUsername();
+    if (message.players[username].zombie) {
+        this.props.history.replaceState(null, '/game', {zombie: true});
+    } else {
+      this.props.history.replaceState(null, '/game');
+    }
+  }
+
   onReady () {
     ws.readyPlayer(!this.state.ready);
     this.setState({

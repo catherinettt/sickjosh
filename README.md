@@ -6,7 +6,7 @@ Don't forget about ```npm install```
 
 ```npm run build``` (if you made changes to /public/src)
 
-```npm run app```
+```npm run server```
 
 
 ### To work on React (webpack-hot-web live update, port 8889) 

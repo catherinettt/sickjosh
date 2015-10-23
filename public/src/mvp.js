@@ -1,5 +1,3 @@
-// alert('hello');
-
 var ws = new WebSocket('ws://localhost:8888');
 
 ws.onmessage = function(e){
@@ -18,4 +16,3 @@ ws.onmessage = function(e){
 		}, 100)
 	}
 }
-

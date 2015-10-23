@@ -38,7 +38,7 @@ ws.onmessage = function(e){
 		}
 
 		//pass more things to admin
-		if (message.type === 'status') {
+		if (message.type === 'status' && message.type === 'start') {
 			if (ws.adminReceiver) {
 				ws.adminReceiver(message);
 			}

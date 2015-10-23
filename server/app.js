@@ -27,6 +27,11 @@ wss.on('connection', function connection(ws) {
           registeredPlayers: game.registeredPlayers
         }));
         break;
+      case 'update':
+        // data.fields: {zombie: true}
+        if (data.fields && data.playerName) {
+          game.updatePlayerData(data);
+        }
       case 'register': 
         var playerData = {
           playerName: data.playerName, 
@@ -39,12 +44,13 @@ wss.on('connection', function connection(ws) {
         game.removePlayerData(data.playerName);
         break;
       case 'ready': 
-        var playerData = {
+        var data = {
           playerName: data.playerName,
-          ready: data.ready,
-          zombie: false
+          fields: {
+            ready: data.ready
+          }
         }
-        game.setPlayerData(playerData);
+        game.updatePlayerData(data);
         break;
       case 'chat': 
         if (game.registeredPlayers[data.playerName]) {

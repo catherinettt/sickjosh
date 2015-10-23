@@ -1,7 +1,7 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'run', 'app' ]
-2 info using npm@2.11.3
-3 info using node@v0.12.7
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'run', 'app' ]
+2 info using npm@2.11.2
+3 info using node@v0.12.5
 4 verbose stack Error: missing script: app
 4 verbose stack     at run (/usr/local/lib/node_modules/npm/lib/run-script.js:142:19)
 4 verbose stack     at /usr/local/lib/node_modules/npm/lib/run-script.js:58:5
@@ -13,11 +13,11 @@
 4 verbose stack     at evalmachine.<anonymous>:334:14
 4 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:102:5
 4 verbose stack     at FSReqWrap.oncomplete (evalmachine.<anonymous>:95:15)
-5 verbose cwd /Users/catherinetan/Development/sickowl
-6 error Darwin 14.3.0
-7 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "run" "app"
-8 error node v0.12.7
-9 error npm  v2.11.3
+5 verbose cwd /Users/joanf/Projects/sickjosh
+6 error Darwin 14.5.0
+7 error argv "node" "/usr/local/bin/npm" "run" "app"
+8 error node v0.12.5
+9 error npm  v2.11.2
 10 error missing script: app
 11 error If you need help, you may report this error at:
 11 error     <https://github.com/npm/npm/issues>

@@ -75,6 +75,17 @@ ws.readyPlayer = function(ready) {
 	ws.send(JSON.stringify(message));
 }
 
+ws.updatePlayer = function(fields) {
+	var user = Parse.User.current();
+	if (!user) return;
+	var message = {
+		type: 'update',
+		fields: fields,
+		playerName: user.getUsername()
+	}
+	ws.send(JSON.stringify(message));
+}
+
 ws.sendChat = function(text) {
 	var user = Parse.User.current();
 	if (!user) return;

@@ -27,6 +27,23 @@ Game.prototype.setPlayerData = function(playerData) {
   })
 }
 
+Game.prototype.updatePlayerData = function(data){
+  var self = this;
+  _.each(data.fields, function(value, key) {
+    if (self.registeredPlayers[data.playerName]) {
+      self.registeredPlayers[data.playerName][key] = value;
+    }
+  });
+
+  this.broadcast({
+    type: 'readyState',
+    registeredNumber: _.size(this.registeredPlayers),
+    readyNumber: this.getReadyCount(), 
+    registeredPlayers: this.registeredPlayers
+  })
+}
+
+
 Game.prototype.removePlayerData = function(playerName) {
   if (this.registeredPlayers[playerName]) {
     delete this.registeredPlayers[playerName];

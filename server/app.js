@@ -23,7 +23,8 @@ wss.on('connection', function connection(ws) {
       case 'status': 
         ws.send(JSON.stringify({
           type: 'status',
-          status: 'good'
+          status: 'good',
+          registeredPlayers: game.registeredPlayers
         }));
         break;
       case 'register': 

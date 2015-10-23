@@ -66,6 +66,7 @@ class Status extends React.Component {
   }
 
   render() {
+
     var statusIcon, statusColor, header, logoutBtn;
     if (this.state.isPinging) {
       statusIcon = 'glyphicon glyphicon-hourglass';
@@ -78,19 +79,24 @@ class Status extends React.Component {
       statusColor = '#a94442';
     }
 
-    if (!Parse.User.current()) {
-      header = 'Registration'
+    header = this.props.location.pathname;
+
+    if (header === '/') {
+      header = 'Lobby';
     } else {
-      header = 'Lobby'
+      header = header.charAt(1).toUpperCase() + header.substr(2);
+    }
+    if (Parse.User.current()) {
       logoutBtn = (
         <button type="button" onClick={this.logout.bind(this)} className='btn btn-default navbar-btn pull-right'>Logout</button>
       )
-    }
+    } 
+
     return (
       <nav className="navbar navbar-default">
         <div className="container-fluid">
             <a className="navbar-brand">
-            <span className={statusIcon} style={{'color': statusColor}}></span>
+            <span className='glyphicon glyphicon-globe' style={{'color': statusColor}}></span>
           </a>
           <p className='navbar-text pull-left'>{header}</p>
           {logoutBtn}        

@@ -16,4 +16,3 @@ ws.onmessage = function(e){
 		}, 100)
 	}
 }
-

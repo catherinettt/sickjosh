@@ -51,6 +51,10 @@ wss.on('connection', function connection(ws) {
           }
         }
         game.updatePlayerData(data);
+
+        if(game.shouldStartGame()) {
+          game.startCountdown();
+        }
         break;
       case 'chat': 
         if (game.registeredPlayers[data.playerName]) {

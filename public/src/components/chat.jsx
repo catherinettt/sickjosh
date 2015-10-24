@@ -18,11 +18,13 @@ class Chat extends React.Component {
   }
 
   incomingMsg(message) {
-    if (message.type === 'chat') {
-        var chatHistory = this.state.chatHistory.concat(message);
-        this.setState({
-            chatHistory
-        });
+    if(this.props.zombie) {
+      if (message.type === 'chat') {
+          var chatHistory = this.state.chatHistory.concat(message);
+          this.setState({
+              chatHistory
+          });
+      }
     }
   }
 
@@ -52,17 +54,19 @@ class Chat extends React.Component {
   }
 
   renderInput() {
-    if (Parse.User.current()) {
-      return (
-        <form className='-input' onSubmit={this.onChatSend.bind(this)}>
-          <div className="input-group">
-            <input ref='chatInput' type="text" className="form-control" placeholder="Enter message here" />
-            <span className="input-group-btn">
-              <button className="btn btn-default" type="button">Send</button>
-            </span>
-          </div>
-        </form>
-      )
+    if (!this.props.zombie) {
+      if (Parse.User.current()) {
+        return (
+          <form className='-input' onSubmit={this.onChatSend.bind(this)}>
+            <div className="input-group">
+              <input ref='chatInput' type="text" className="form-control" placeholder="Enter message here" />
+              <span className="input-group-btn">
+                <button className="btn btn-default" type="button">Send</button>
+              </span>
+            </div>
+          </form>
+        )
+      }
     }
   }
 

@@ -37,10 +37,13 @@ ws.onmessage = function(e){
 			ws[func](message);
 		}
 
-		//pass more things to admin
-		if (message.type === 'status' && message.type === 'start') {
-			if (ws.adminReceiver) {
+		//pass more things to admin && game status
+		if (message.type === 'status' || message.type === 'start') {
+			if (ws.adminReceiver && func !== 'adminReceiver') {
 				ws.adminReceiver(message);
+			}
+			if (ws.gameStateReceiver && func !== 'gameStateReceiver') {
+				ws.gameStateReceiver(message);
 			}
 		}
 	}

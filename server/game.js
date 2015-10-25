@@ -31,6 +31,7 @@ Game.prototype.setPlayerData = function(playerData) {
 
 Game.prototype.updatePlayerData = function(data){
   var self = this;
+  // data = {playerName: 'abc', fields: {zombie: true}};
   _.each(data.fields, function(value, key) {
     if (self.registeredPlayers[data.playerName]) {
       self.registeredPlayers[data.playerName][key] = value;
@@ -38,13 +39,12 @@ Game.prototype.updatePlayerData = function(data){
   });
 
   this.broadcast({
-    type: 'readyState',
+    type: 'gameState',
     registeredNumber: _.size(this.registeredPlayers),
     readyNumber: this.getReadyCount(), 
     registeredPlayers: this.registeredPlayers
   })
 }
-
 
 Game.prototype.removePlayerData = function(playerName) {
   if (this.registeredPlayers[playerName]) {

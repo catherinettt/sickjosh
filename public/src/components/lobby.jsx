@@ -10,10 +10,10 @@ class Lobby extends React.Component {
   constructor() {
     super();
     this.state = {
-      playerName: Parse.User.current().getUsername(), 
+      playerName: Parse.User.current().getUsername(),
       registeredNumber: 0,
-      readyNumber: 0, 
-      ready: false, 
+      readyNumber: 0,
+      ready: false,
       registeredPlayers: {}
     }
     ws.readyStateReceiver = this.incomingMsg.bind(this);
@@ -59,7 +59,7 @@ class Lobby extends React.Component {
       return _.map(this.state.registeredPlayers, (player) => {
         var ready = player.ready ? 'glyphicon glyphicon-ok' : '';
         return (
-          <div className='col-xs-6' key={player.playerName}> 
+          <div className='col-xs-6' key={player.playerName}>
             <span>{player.playerName}</span> <span style={{'color': '#3c763d'}} className={ready}></span>
           </div>
         )
@@ -68,9 +68,9 @@ class Lobby extends React.Component {
   }
   render() {
     var readyText = this.state.ready ? 'Hold On' : 'Ready Up';
-    var welcomeText = this.state.ready ? 'You are ready! Let\'s wait for others.' : 'Go hide and get ready!'; 
+    var welcomeText = this.state.ready ? 'You are ready! Let\'s wait for others.' : 'Go hide and get ready!';
     return (
-      <div className='sj-lobby container-fluid'> 
+      <div className='sj-lobby container-fluid'>
         <div className='text-center'>
             <button className='btn btn-lg btn-success' onClick={this.onReady.bind(this)}>{readyText}</button>
         </div>

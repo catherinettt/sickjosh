@@ -9,38 +9,22 @@ require('./admin.less')
 var ws = require('../ws-utils');
 var _ = require('underscore');
 
-// TODO: Remove hardcoded state and players
-var gameState = "active";
-var players = [
-  {
-    playerName: "toby.sullivan",
-    zombie: false,
-    ready: true
-  },
-  {
-    playerName: "other.guy",
-    zombie: false,
-    ready: false
-  },
-  {
-    playerName: "zombie.person",
-    zombie: true,
-    ready: true
-  }
-];
-
 var GameStatus = React.createClass({
+  startGame: function() {
+    ws.startGame();
+  },
+
   render: function() {
     var statusBar = "";
-    if (this.props.status.state == "lobby") {
+    if (this.props.gameState.status == "good") {
       statusBar = (
         <div className='-status-lobby'>
-          {this.props.status.readyPlayers}/{this.props.status.totalPlayers} Players Ready
+          {this.props.gameState.readyPlayers}/{this.props.gameState.totalPlayers} Players Ready
           &nbsp;
-          <button className='btn'>Start Game</button>
+          <button className='btn' onClick={this.startGame}>Start Game</button>
         </div>
       )
-    } else if (this.props.status.state == "active") {
+    } else if (this.props.gameState.status == "active") {
       statusBar = (
         <div className='-status-active'>
           Game Active <button className='btn'>End Game</button>
@@ -62,7 +46,7 @@ var GameStatus = React.createClass({
 var PlayerListItem = React.createClass({
   render: function() {
     var icon = '';
-    if (this.props.gameState == "lobby") {
+    if (this.props.gameState == "good") {
       icon = this.props.player.ready ? 'glyphicon glyphicon-ok' : '';
     } else if (this.props.gameState == "active") {
       icon = this.props.player.zombie ? 'glyphicon glyphicon-tint' : 'glyphicon glyphicon-user';
@@ -96,29 +80,22 @@ class Admin extends React.Component {
     this.state = {
         registeredPlayers: {},
         countdown: {},
-        safezones: {}
+        safezones: {},
+        status: "good"
     }
     ws.adminReceiver = this.incomingMsg.bind(this);
-  }
-
-  componentDidMount() {
-    var SafeZone = Parse.Object.extend("SafeZone");
-    var query = new Parse.Query(SafeZone);
-    query.include("map");
-    query.find().then((results) => {
-      if (results.length) {
-        this.setState({
-         safezones: results
-        });
-      }
-    });
   }
 
   incomingMsg(message) {
     if (message.type === 'status') {
       this.setState({
+        registeredPlayers: message.registeredPlayers,
+        status: message.status
+      });
+    } else if (message.type === 'readyState') {
+      this.setState({
         registeredPlayers: message.registeredPlayers
-      })
+      });
     }
   }
 
@@ -140,18 +117,19 @@ class Admin extends React.Component {
   }
 
   render() {
+    var players = this.state.registeredPlayers;
     var totalPlayers = _.size(players);
     var readyPlayers = _.size(_.filter(players, function(player) { return player.ready; }));
 
     var gameStatus = {
-      state: gameState,
+      status: this.state.status,
       readyPlayers: readyPlayers,
       totalPlayers: totalPlayers
     }
     return (
       <div className='js-admin container-fluid'>
-        <GameStatus status={gameStatus}></GameStatus>
-        <PlayerList players={players} gameState={gameStatus.state}></PlayerList>
+        <GameStatus gameState={gameStatus}></GameStatus>
+        <PlayerList players={players} gameState={gameStatus.status}></PlayerList>
         <hr />
         <div className='-safezones'>
           <h4>Safezones</h4>

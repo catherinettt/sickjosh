@@ -6,6 +6,14 @@ var _ = require('underscore');
 
 require('./lobby.less');
 
+var CountdownTimer = React.createClass({
+  render: function() {
+    return (
+      <h1>Game starting in {this.props.countdownTime}</h1>
+    );
+  }
+});
+
 class Lobby extends React.Component {
   constructor() {
     super();
@@ -14,11 +22,12 @@ class Lobby extends React.Component {
       registeredNumber: 0,
       readyNumber: 0,
       ready: false,
-      registeredPlayers: {}
+      registeredPlayers: {},
+      countdownTime: undefined
     }
     ws.readyStateReceiver = this.incomingMsg.bind(this);
     ws.startReceiver = this.startGame.bind(this);
-    ws.startCountdownReceiver = this.startCountdown.bind(this);
+    ws.startCountdownReceiver = this.incomingMsg.bind(this);
   }
 
   incomingMsg (message) {
@@ -29,11 +38,25 @@ class Lobby extends React.Component {
         readyNumber: message.readyNumber,
         registeredPlayers: message.registeredPlayers
       });
+    } else if (message.type === 'startCountdown') {
+      console.log('startCountdown message: '+JSON.stringify(message));
+      var countdownTime = message.time / 1000;
+      console.log('Computed timer amount: '+JSON.stringify(countdownTime));
+
+      this.startCountdown(countdownTime);
     }
   }
 
-  startCountdown(message) {
-    //TODO display countdown
+  startCountdown(time) {
+    console.log("startCountdown: "+JSON.stringify(time));
+
+    this.setState({
+      countdownTime: time
+    });
+
+    if (time > 0) {
+      setTimeout(this.startCountdown.bind(this, time - 1), 1000);
+    }
   }
 
   startGame(message) {
@@ -69,8 +92,12 @@ class Lobby extends React.Component {
   render() {
     var readyText = this.state.ready ? 'Hold On' : 'Ready Up';
     var welcomeText = this.state.ready ? 'You are ready! Let\'s wait for others.' : 'Go hide and get ready!';
+
+    var countdownTimer = this.state.countdownTime === undefined ? '' : (<CountdownTimer countdownTime={this.state.countdownTime} />)
+
     return (
       <div className='sj-lobby container-fluid'>
+        {countdownTimer}
         <div className='text-center'>
             <button className='btn btn-lg btn-success' onClick={this.onReady.bind(this)}>{readyText}</button>
         </div>

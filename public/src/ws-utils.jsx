@@ -125,4 +125,15 @@ ws.unregisterPlayer = function(playerName) {
 	}
 	ws.send(JSON.stringify(message));
 }
+
+ws.submitInfection = function (pin) {
+	var user = Parse.User.current();
+	var message = {
+		type: 'infected',
+		playerName: user.getUsername(),
+		pin: pin
+	};
+	ws.send(JSON.stringify(message));
+};
+
 module.exports = ws;

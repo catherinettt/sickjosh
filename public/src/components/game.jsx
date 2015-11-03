@@ -66,6 +66,7 @@ class Game extends React.Component {
             this.setObjectives();
         }
 
+
         this.redirectZombie();
     }
 
@@ -75,6 +76,14 @@ class Game extends React.Component {
           return;
       }
     }
+
+    _onInfectedClick() {
+        this.props.history.replaceState(null, '/pin', {
+            type: 'infected',
+            title: 'Zombie Pin'
+        });
+    }
+
 
     _renderGameProgress() {
         var percentage = this.state.zombieCount / this.state.survivorCount;
@@ -121,7 +130,7 @@ class Game extends React.Component {
             <div className="-survivor container">
                 {this._renderCurrentObjective()}
                 <div className="-actions">
-                    <button className='btn btn-default btn-lg'>I am infected...</button>
+                    <button className='btn btn-default btn-lg' onClick={this._onInfectedClick.bind(this)}>I am infected...</button>
                 </div>
             </div>
         );

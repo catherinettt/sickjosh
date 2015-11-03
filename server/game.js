@@ -24,7 +24,7 @@ Game.prototype.setPlayerData = function(playerData) {
   this.broadcast({
     type: 'readyState',
     registeredNumber: _.size(this.registeredPlayers),
-    readyNumber: this.getReadyCount(), 
+    readyNumber: this.getReadyCount(),
     registeredPlayers: this.registeredPlayers
   })
 }
@@ -41,7 +41,7 @@ Game.prototype.updatePlayerData = function(data){
   this.broadcast({
     type: 'gameState',
     registeredNumber: _.size(this.registeredPlayers),
-    readyNumber: this.getReadyCount(), 
+    readyNumber: this.getReadyCount(),
     registeredPlayers: this.registeredPlayers
   })
 }
@@ -53,7 +53,7 @@ Game.prototype.removePlayerData = function(playerName) {
   this.broadcast({
     type: 'readyState',
     registeredNumber: _.size(this.registeredPlayers),
-    readyNumber: this.getReadyCount(), 
+    readyNumber: this.getReadyCount(),
     registeredPlayers: this.registeredPlayers
   })
 }
@@ -86,7 +86,11 @@ Game.prototype.resetSurvivors = function() {
 
 Game.prototype.shouldStartGame = function () {
   var readyPlayers = this.getReadyCount();
-  return readyPlayers === _.size(this.registeredPlayers);
+  var percentReady = readyPlayers / _.size(this.registeredPlayers);
+
+  // Allow game start if > 50% players ready
+  var shouldStart = percentReady >= 0.5;
+  return shouldStart;
 }
 
 Game.prototype.startCountdown = function () {

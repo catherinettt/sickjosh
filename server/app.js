@@ -20,7 +20,7 @@ wss.on('connection', function connection(ws) {
     console.log('received: %s', message);
     var data = JSON.parse(message);
     switch (data.type) {
-      case 'status': 
+      case 'status':
         ws.send(JSON.stringify({
           type: 'status',
           status: 'good',
@@ -32,18 +32,18 @@ wss.on('connection', function connection(ws) {
         if (data.fields && data.playerName) {
           game.updatePlayerData(data);
         }
-      case 'register': 
+      case 'register':
         var playerData = {
-          playerName: data.playerName, 
+          playerName: data.playerName,
           ready: false,
           zombie: false
         }
         game.setPlayerData(playerData);
         break;
-      case 'unregister': 
+      case 'unregister':
         game.removePlayerData(data.playerName);
         break;
-      case 'ready': 
+      case 'ready':
         var data = {
           playerName: data.playerName,
           fields: {
@@ -52,11 +52,14 @@ wss.on('connection', function connection(ws) {
         }
         game.updatePlayerData(data);
 
+        break;
+      case 'startGame':
+        console.log('Received startGame message.');
         if(game.shouldStartGame()) {
           game.startCountdown();
         }
         break;
-      case 'chat': 
+      case 'chat':
         if (game.registeredPlayers[data.playerName]) {
           game.broadcast({
             type: 'chat',
@@ -66,13 +69,12 @@ wss.on('connection', function connection(ws) {
           });
         }
         break;
-      defaut: 
+      defaut:
         break;
     }
   });
- 
+
   ws.on('close', function(){
   	console.log('close!!!');
   })
 });
-

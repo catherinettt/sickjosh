@@ -31,6 +31,7 @@ ws.onclose = function() {
 
 ws.onmessage = function(e){
 	var message = JSON.parse(e.data);
+	console.log('ws.onmessage: '+JSON.stringify(message));
 	if (message.type) {
 		var func = message.type + 'Receiver'; // chatReceiver;
 		if (ws[func]) {
@@ -38,13 +39,11 @@ ws.onmessage = function(e){
 		}
 
 		//pass more things to admin && game status
-		if (message.type === 'status' || message.type === 'start') {
-			if (ws.adminReceiver && func !== 'adminReceiver') {
-				ws.adminReceiver(message);
-			}
-			if (ws.gameStateReceiver && func !== 'gameStateReceiver') {
-				ws.gameStateReceiver(message);
-			}
+		if (ws.adminReceiver && func !== 'adminReceiver') {
+			ws.adminReceiver(message);
+		}
+		if (ws.gameStateReceiver && func !== 'gameStateReceiver') {
+			ws.gameStateReceiver(message);
 		}
 	}
 }
@@ -86,6 +85,13 @@ ws.updatePlayer = function(fields) {
 		fields: fields,
 		playerName: user.getUsername()
 	}
+	ws.send(JSON.stringify(message));
+}
+
+ws.startGame = function() {
+	var message = {
+		type: 'startGame'
+	};
 	ws.send(JSON.stringify(message));
 }
 

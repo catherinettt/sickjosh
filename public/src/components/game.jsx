@@ -5,9 +5,11 @@ require('./game.less');
 var ws = require('../ws-utils');
 var _ = require('underscore');
 
+var Zombie = require('./zombie');
+
 class Game extends React.Component {
     constructor(props) {
-        super();
+        super(props);
     var {query} = props.location;
     this.state = {
       zombie: query && query.zombie,
@@ -18,13 +20,15 @@ class Game extends React.Component {
     ws.startReceiver = this.incomingMsg.bind(this);
     ws.gameStateReceiver = this.incomingMsg.bind(this);
 
+
+      this.redirectZombie();
     }
 
     componentDidMount() {
         setTimeout(() => {
            if (this.state.survivorCount === 0) {
                 ws.statusPing();
-            } 
+            }
         }, 500);
     }
 
@@ -44,14 +48,15 @@ class Game extends React.Component {
                 zombieCount
             });
         }
+
+        this.redirectZombie();
     }
 
-    _renderZombieScreen() {
-        return (
-            <div className="-zombie">
-                Zombie
-            </div>
-        );
+    redirectZombie() {
+      if (this.state.zombie) {
+          this.props.history.replaceState(null, '/zombie');
+          return;
+      }
     }
 
     _renderSurvivorScreen() {
@@ -83,12 +88,9 @@ class Game extends React.Component {
     }
 
     render() {
-        var main;
-        if (this.state.zombie) {
-            main = this._renderZombieScreen();
-        } else {
-            main = this._renderSurvivorScreen();
-        }
+
+
+        var main = this._renderSurvivorScreen();
 
         return (
             <div className='rc-game'>

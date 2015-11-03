@@ -34,9 +34,9 @@ class Home extends React.Component {
 
   render() {
     return (
-      <div className='js-home'> 
+      <div className='js-home'>
         <Status {...this.props} />
-        {this.props.children} 
+        {this.props.children}
         <Chat {...this.props} zombie={this.state.zombie}/>
       </div>
     );

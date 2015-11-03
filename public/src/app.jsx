@@ -22,18 +22,19 @@ var requireAdmin= (nextState, replaceState) => {
   if (user) {
     if (user.getUsername() !== 'ADMIN') {
       replaceState({ nextPathname: nextState.location.pathname }, '/');
-    } 
+    }
   } else {
     replaceState({ nextPathname: nextState.location.pathname }, '/register');
   }
 }
- 
+
 React.render((
   <Router>
     <Route path="/" component={require('./components/home')}>
       <Route path="admin" component={require('./components/admin')} onEnter={requireAdmin}/>
       <Route path="register" component={require('./components/register')} />
       <Route path="game" component={require('./components/game')} onEnter={requireAuth} />
+      <Route path="zombie" component={require('./components/zombie')} onEnter={requireAuth} />
       <IndexRoute component={require('./components/lobby')} onEnter={requireAuth} />
     </Route>
   </Router>

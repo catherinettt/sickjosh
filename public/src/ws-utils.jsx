@@ -45,6 +45,9 @@ ws.onmessage = function(e){
 		if (ws.gameStateReceiver && func !== 'gameStateReceiver') {
 			ws.gameStateReceiver(message);
 		}
+		if (ws.zombieStateReceiver && func !== 'zombieStateReceiver') {
+			ws.zombieStateReceiver(message);
+		}
 	}
 }
 

@@ -18,7 +18,7 @@ class Chat extends React.Component {
   }
 
   incomingMsg(message) {
-    if(this.props.zombie) {
+    if(!this.props.zombie) {
       if (message.type === 'chat') {
           var chatHistory = this.state.chatHistory.concat(message);
           this.setState({
@@ -83,3 +83,7 @@ class Chat extends React.Component {
 }
 
 module.exports = Chat;
+
+module.defaultProps = {
+  zombie: false
+};

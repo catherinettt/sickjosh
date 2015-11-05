@@ -18,8 +18,8 @@ class Chat extends React.Component {
   }
 
   incomingMsg(message) {
-    if(!this.props.zombie) {
-      if (message.type === 'chat') {
+    if (message.type === 'chat') {
+        if(!this.props.zombie || message.playerName === 'ADMIN') {
           var chatHistory = this.state.chatHistory.concat(message);
           this.setState({
               chatHistory
@@ -28,14 +28,14 @@ class Chat extends React.Component {
     }
   }
 
-  onChatSend() {
+  onChatSend(e) {
+    e.preventDefault();
     var input = React.findDOMNode(this.refs.chatInput);
 
     if (input.value && Parse.User.current()) {
         ws.sendChat(input.value);
     }
     input.value = '';
-    return;
   }
 
   scrollBottomOfChat() {

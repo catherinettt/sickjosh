@@ -20,7 +20,12 @@ Game.prototype.getReadyCount = function() {
 }
 
 Game.prototype.setPlayerData = function(playerData) {
-  this.registeredPlayers[playerData.playerName] = playerData;
+  if (!this.registeredPlayers[playerData.playerName]) {
+    this.registeredPlayers[playerData.playerName] = playerData;
+  } else {
+    this.registeredPlayers[playerData.playerName].zombie = false;
+    this.registeredPlayers[playerData.playerName].ready = false;
+  }
   this.broadcast({
     type: 'readyState',
     registeredNumber: _.size(this.registeredPlayers),
@@ -39,7 +44,7 @@ Game.prototype.updatePlayerData = function(data){
   });
 
   this.broadcast({
-    type: 'gameState',
+    type: 'readyState',
     registeredNumber: _.size(this.registeredPlayers),
     readyNumber: this.getReadyCount(),
     registeredPlayers: this.registeredPlayers
@@ -66,7 +71,7 @@ Game.prototype.setInitialZombies = function(initialNumberOfZombies) {
   var playerNames = _.keys(this.registeredPlayers);
   while(initialNumberOfZombies > 0) {
     var randomZombie = Math.floor(Math.random() * playerNames.length);
-    if (!this.registeredPlayers[playerNames[randomZombie]].zombie) {
+    if (playerNames[randomZombie] !== 'ADMIN' && !this.registeredPlayers[playerNames[randomZombie]].zombie) {
       this.registeredPlayers[playerNames[randomZombie]].zombie = true;
       initialNumberOfZombies--;
     }
@@ -76,12 +81,6 @@ Game.prototype.setInitialZombies = function(initialNumberOfZombies) {
     type: 'start',
     players: this.registeredPlayers
   });
-}
-
-Game.prototype.resetSurvivors = function() {
-  for(var player in this.registeredPlayers) {
-      player.zombie = false;
-  }
 }
 
 Game.prototype.shouldStartGame = function () {

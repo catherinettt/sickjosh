@@ -5,7 +5,7 @@ require('./home.less');
 var Chat = require('./chat');
 var Status = require('./status');
 var ws = require('../ws-utils');
-
+var chainedFunctions = require('../chained-functions');
 
 import { Router, Route, Link } from 'react-router';
 
@@ -14,9 +14,11 @@ class Home extends React.Component {
     super();
     this.state = {
       zombie: false
-    }
+    };
+  }
 
-    ws.startReciever = this.incomingMsg.bind(this);
+  componentDidMount() {
+    ws.startReceiver = chainedFunctions(ws.startReceiver, this.incomingMsg.bind(this));
   }
 
   incomingMsg(message) {

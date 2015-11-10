@@ -59,14 +59,6 @@ class Game extends React.Component {
       }
     }
 
-    _renderSurvivorScreen() {
-        return (
-            <div className="-survivor">
-                Survivor
-            </div>
-        );
-    }
-
     _renderGameProgress() {
         var percentage = this.state.zombieCount / this.state.survivorCount;
         return (
@@ -87,9 +79,23 @@ class Game extends React.Component {
         )
     }
 
+     _renderSurvivorScreen() {
+        return (
+            <div className="-survivor container">
+                <div className="-objectives">
+                    <span className="label label-primary"> Objective </span>
+                    <span className="label label-primary -progress">1/5</span>
+                    <p> Go to Spotted and locate PIN </p>
+                    <button className='btn btn-primary btn-lg'>Enter PIN</button>
+                </div>
+                <div className="-actions">
+                    <button className='btn btn-default btn-lg'>I am infected...</button>
+                </div>
+            </div>
+        );
+    }
+
     render() {
-
-
         var main = this._renderSurvivorScreen();
 
         return (

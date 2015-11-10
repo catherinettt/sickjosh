@@ -11,12 +11,38 @@
 			position: absolute;
 			top: 0;
 			left: 0;
-			bottom: 0;
 			right: 0;
 			display: flex;   
 			justify-content: space-between;
 			line-height: 50px;
 			padding: 0 10px;
+		}
+	}
+	.-survivor{
+		text-align: center;
+		button{
+		    margin: 0.25em auto;
+			display: block;
+		}
+		.-objectives{
+			background-color: rgba(225,225,225, 0.9);
+			border-radius: 0.5em;
+			padding: 0.25em;
+			position: relative;
+			padding-top: 2.5em;
+			box-shadow: 0px 0px 6px #484848;
+			.label {
+				position: absolute;
+				top: 0.5em;
+				left: 0.75em;
+				&.-progress {
+					left: auto;
+					right: 0.75em;
+				}
+			}
+		}
+		.-actions{
+			margin-top: 1em;
 		}
 	}
 }

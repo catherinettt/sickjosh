@@ -69,19 +69,15 @@ wss.on('connection', function connection(ws) {
           });
         }
         break;
-<<<<<<< HEAD
       case 'setObjective':
         game.broadcast({
           type: 'newObjective',
           objectiveId: data.objectiveId
         };
-      defaut:
-=======
       case 'infected':
         console.log(data);
         break;
       default:
->>>>>>> pin screen and socket listening for infection pins
         break;
     }
   });

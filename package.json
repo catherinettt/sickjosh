@@ -6,6 +6,7 @@
   "scripts": {
     "build": "./node_modules/webpack/bin/webpack.js",
     "server": "forever start ./server/app.js",
+    "restart": "forever restart ./server/app.js",
     "dev": "node webpack"
   },
   "author": "",

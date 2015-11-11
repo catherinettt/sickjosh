@@ -80,10 +80,22 @@ class Admin extends React.Component {
     this.state = {
         registeredPlayers: {},
         countdown: {},
-        safezones: {},
+        objectives: {},
         status: "good"
     }
     ws.adminReceiver = this.incomingMsg.bind(this);
+  }
+
+  componentDidMount() {
+    var Objective = Parse.Object.extend("Objective");
+    var query = new Parse.Query(Objective);
+    query.find().then((results) => {
+      if (results.length) {
+        this.setState({
+         objectives: results
+        });
+      }
+    });
   }
 
   incomingMsg(message) {
@@ -92,29 +104,48 @@ class Admin extends React.Component {
         registeredPlayers: message.registeredPlayers,
         status: message.status
       });
-    } else if (message.type === 'readyState') {
+    } else if (message.type === 'playerUpdate') {
       this.setState({
-        registeredPlayers: message.registeredPlayers
+        registeredPlayers: message.players
       });
     }
   }
 
-  renderSafezones() {
-    if (this.state.safezones.length) {
-      return this.state.safezones.map((zone) => {
+  renderObjectives() {
+    if (this.state.objectives.length) {
+      return this.state.objectives.map((objective) => {
+        var activeClass = objective.get('active') ? 'active' : ''
         return (
-          <div className='row' key={zone.id}>
-            <div className='col-xs-8'>
-              {zone.get('map').get('name')} > {zone.get('name')} (Max: {zone.get('maxAllowance')})
-            </div>
-            <div className='col-xs-4'>
-              <button className='btn btn-xs btn-default pull-right'>Activate</button>
-            </div>
-          </div>
+          <tr className={activeClass} key={objective.id}>
+            <td className=''>
+              {objective.get('description')}
+            </td>
+            <td className=''>
+              {objective.get('completed') ? 'true' : 'false'}
+            </td>
+            <td className=''>
+              {objective.get('PIN')}
+            </td>
+            <td className=''>
+              <button className='btn btn-sm btn-default' onClick={this.setObjective.bind(this, objective)}><span className='glyphicon glyphicon-flag'></span></button>
+            </td>
+          </tr>
         )
       })
     }
   }
+
+  setObjective(objective) {
+    objective.set('active', true);
+    objective.save();
+
+    var data = {
+      type: 'setObjective',
+      objectiveId: objective.get('objectId'),
+    }
+    ws.send(JSON.stringify(data));
+  }
+
 
   render() {
     var players = this.state.registeredPlayers;
@@ -131,9 +162,21 @@ class Admin extends React.Component {
         <GameStatus gameState={gameStatus}></GameStatus>
         <PlayerList players={players} gameState={gameStatus.status}></PlayerList>
         <hr />
-        <div className='-safezones'>
-          <h4>Safezones</h4>
-          {this.renderSafezones()}
+        <div className='-objectives'>
+          <h4>Objectives</h4>
+          <table className="table">
+             <thead>
+              <tr>
+                <th>Description</th>
+                <th>Completed</th>
+                <th>PIN</th>
+                <th>Activate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this.renderObjectives()}
+            </tbody>
+          </table>
         </div>
       </div>
     );

@@ -1,14 +1,26 @@
 .js-admin{
 	color: white;
-	.row {
-		max-height: 250px;
-		overflow-y: scroll;
-	}
+	overflow: hidden;
+    overflow-y: scroll;
+    background-color: grey;
+    padding-bottom: 50px;
 	.-players {
 		.-player {
 			overflow: hidden;
 		  	text-overflow: ellipsis;
 		  	white-space: nowrap;
+		}
+	}
+	.-objectives {
+		table {
+			color: white;
+			th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3) {
+				text-align: center;
+			}
+			.active {
+				pointer-events: none;
+				color: grey;
+			}
 		}
 	}
 }

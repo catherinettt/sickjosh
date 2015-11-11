@@ -42,8 +42,8 @@ ws.onmessage = function(e){
 		if (ws.adminReceiver && func !== 'adminReceiver') {
 			ws.adminReceiver(message);
 		}
-		if (ws.gameStateReceiver && func !== 'gameStateReceiver') {
-			ws.gameStateReceiver(message);
+		if (ws.gameReceiver && func !== 'gameReceiver') {
+			ws.gameReceiver(message);
 		}
 		if (ws.zombieStateReceiver && func !== 'zombieStateReceiver') {
 			ws.zombieStateReceiver(message);
@@ -52,6 +52,10 @@ ws.onmessage = function(e){
 		if (message.type === 'playerUpdate') {
 			if (ws.adminReceiver) ws.adminReceiver(message);
 			if (ws.readyStateReceiver) ws.readyStateReceiver(message);
+		}
+
+		if (message.type === 'newObjective') {
+			if (ws.gameReceiver) ws.gameReceiver(message);
 		}
 	}
 }

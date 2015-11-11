@@ -74,7 +74,10 @@ wss.on('connection', function connection(ws) {
           type: 'newObjective',
           objectiveId: data.objectiveId
         };
-      defaut:
+      case 'infected':
+        console.log(data);
+        break;
+      default:
         break;
     }
   });

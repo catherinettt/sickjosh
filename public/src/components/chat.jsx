@@ -28,7 +28,7 @@ class Chat extends React.Component {
     }
   }
 
-  onChatSend(e) {
+  onChatSend() {
     var input = React.findDOMNode(this.refs.chatInput);
 
     if (input.value && Parse.User.current()) {

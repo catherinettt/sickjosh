@@ -13,6 +13,13 @@ Game.prototype.broadcast = function (data){
   });
 }
 
+Game.prototype.broadcastPlayerUpdate = function () {
+  this.broadcast({
+    'type': 'playerUpdate',
+    'players': this.registeredPlayers
+  });
+}
+
 Game.prototype.getReadyCount = function() {
   return _.size(_.filter(this.registeredPlayers, function(player) {
     return player.ready
@@ -21,12 +28,7 @@ Game.prototype.getReadyCount = function() {
 
 Game.prototype.setPlayerData = function(playerData) {
   this.registeredPlayers[playerData.playerName] = playerData;
-  this.broadcast({
-    type: 'readyState',
-    registeredNumber: _.size(this.registeredPlayers),
-    readyNumber: this.getReadyCount(),
-    registeredPlayers: this.registeredPlayers
-  })
+  this.broadcastPlayerUpdate();
 }
 
 Game.prototype.updatePlayerData = function(data){
@@ -37,25 +39,14 @@ Game.prototype.updatePlayerData = function(data){
       self.registeredPlayers[data.playerName][key] = value;
     }
   });
-
-  this.broadcast({
-    type: 'gameState',
-    registeredNumber: _.size(this.registeredPlayers),
-    readyNumber: this.getReadyCount(),
-    registeredPlayers: this.registeredPlayers
-  })
+  this.broadcastPlayerUpdate();
 }
 
 Game.prototype.removePlayerData = function(playerName) {
   if (this.registeredPlayers[playerName]) {
     delete this.registeredPlayers[playerName];
   }
-  this.broadcast({
-    type: 'readyState',
-    registeredNumber: _.size(this.registeredPlayers),
-    readyNumber: this.getReadyCount(),
-    registeredPlayers: this.registeredPlayers
-  })
+  this.broadcastPlayerUpdate();
 }
 
 Game.prototype.setInitialZombies = function(initialNumberOfZombies) {

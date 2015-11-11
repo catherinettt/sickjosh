@@ -28,7 +28,7 @@ class Chat extends React.Component {
     }
   }
 
-  onChatSend() {
+  onChatSend(e) {
     var input = React.findDOMNode(this.refs.chatInput);
 
     if (input.value && Parse.User.current()) {
@@ -36,6 +36,13 @@ class Chat extends React.Component {
     }
     input.value = '';
     return;
+  }
+  onInputKeyDown (e) {
+    var key = e.key;
+    if (key === 'Enter') {
+      e.preventDefault();
+      this.onChatSend();
+    }
   }
 
   scrollBottomOfChat() {
@@ -59,9 +66,9 @@ class Chat extends React.Component {
         return (
           <form className='-input' onSubmit={this.onChatSend.bind(this)}>
             <div className="input-group">
-              <input ref='chatInput' type="text" className="form-control" placeholder="Enter message here" />
+              <input onKeyDown={this.onInputKeyDown.bind(this)} ref='chatInput' type="text" className="form-control" placeholder="Enter message here" />
               <span className="input-group-btn">
-                <button className="btn btn-default" type="button">Send</button>
+                <button className="btn btn-default" type="submit">Send</button>
               </span>
             </div>
           </form>

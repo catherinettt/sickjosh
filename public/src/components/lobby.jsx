@@ -22,7 +22,7 @@ class Lobby extends React.Component {
       registeredNumber: 0,
       readyNumber: 0,
       ready: false,
-      registeredPlayers: {},
+      players: {},
       countdownTime: undefined
     }
     ws.readyStateReceiver = this.incomingMsg.bind(this);
@@ -32,11 +32,14 @@ class Lobby extends React.Component {
 
   incomingMsg (message) {
     // var message = JSON.parse(e.data);
-    if (message.type === 'readyState') {
+    if (message.type === 'playerUpdate') {
+      var readyNumber = _.size(_.filter(message.players, function(player) {
+          return player.ready;
+        }));
       this.setState({
-        registeredNumber: message.registeredNumber,
-        readyNumber: message.readyNumber,
-        registeredPlayers: message.registeredPlayers
+        registeredNumber: _.size(message.players),
+        readyNumber: readyNumber,
+        players: message.players
       });
     } else if (message.type === 'startCountdown') {
       console.log('startCountdown message: '+JSON.stringify(message));
@@ -78,8 +81,8 @@ class Lobby extends React.Component {
   }
 
   renderPlayers () {
-    if (!_.isEmpty(this.state.registeredPlayers)) {
-      return _.map(this.state.registeredPlayers, (player) => {
+    if (!_.isEmpty(this.state.players)) {
+      return _.map(this.state.players, (player) => {
         var ready = player.ready ? 'glyphicon glyphicon-ok' : '';
         return (
           <div className='col-xs-6' key={player.playerName}>
@@ -103,7 +106,7 @@ class Lobby extends React.Component {
         </div>
         <hr />
         <div className="-players">
-          <h3>Players <span className='pull-right'>{this.state.readyNumber}/{_.size(this.state.registeredPlayers)}</span></h3>
+          <h3>Players <span className='pull-right'>{this.state.readyNumber}/{_.size(this.state.players)}</span></h3>
           <div className='row'>
            {this.renderPlayers()}
           </div>

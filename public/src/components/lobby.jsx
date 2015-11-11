@@ -3,6 +3,7 @@
 var React = require('react');
 var ws = require('../ws-utils');
 var _ = require('underscore');
+var chainedFunctions = require('../chained-functions');
 
 require('./lobby.less');
 
@@ -24,14 +25,16 @@ class Lobby extends React.Component {
       ready: false,
       registeredPlayers: {},
       countdownTime: undefined
-    }
+    };
+  }
+
+  componentDidMount() {
     ws.readyStateReceiver = this.incomingMsg.bind(this);
-    ws.startReceiver = this.startGame.bind(this);
+    ws.startReceiver = chainedFunctions(ws.startReceiver, this.startGame.bind(this));
     ws.startCountdownReceiver = this.incomingMsg.bind(this);
   }
 
   incomingMsg (message) {
-    // var message = JSON.parse(e.data);
     if (message.type === 'readyState') {
       this.setState({
         registeredNumber: message.registeredNumber,

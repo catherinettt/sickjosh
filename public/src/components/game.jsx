@@ -8,8 +8,8 @@ var _ = require('underscore');
 var Zombie = require('./zombie');
 
 class Game extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super();
     var {query} = props.location;
     this.state = {
       zombie: query && query.zombie,
@@ -17,23 +17,23 @@ class Game extends React.Component {
       zombieCount: 0
     };
 
-    ws.startReceiver = this.incomingMsg.bind(this);
-    ws.gameStateReceiver = this.incomingMsg.bind(this);
-
-
-      this.redirectZombie();
+    if (this.state.zombie) {
+      props.history.replaceState(null, '/zombie');
     }
+  }
 
     componentDidMount() {
-        setTimeout(() => {
-           if (this.state.survivorCount === 0) {
-                ws.statusPing();
-            }
-        }, 500);
+      ws.gameStateReceiver = this.incomingMsg.bind(this);
+
+      setTimeout(() => {
+         if (this.state.survivorCount === 0) {
+              ws.statusPing();
+          }
+      }, 500);
     }
 
     incomingMsg(message) {
-        if (message.type === 'start' || message.type === 'status') {
+        if (message.type === 'status') {
             var user = Parse.User.current();
             if (!user) return;
             var username = user.getUsername();
@@ -48,15 +48,6 @@ class Game extends React.Component {
                 zombieCount
             });
         }
-
-        this.redirectZombie();
-    }
-
-    redirectZombie() {
-      if (this.state.zombie) {
-          this.props.history.replaceState(null, '/zombie');
-          return;
-      }
     }
 
     _renderGameProgress() {

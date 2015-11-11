@@ -1,5 +1,6 @@
 'use strict';
 
+import {Link} from 'react-router'
 var React = require('react');
 require('./game.less');
 var ws = require('../ws-utils');
@@ -77,14 +78,6 @@ class Game extends React.Component {
       }
     }
 
-    _onInfectedClick() {
-        this.props.history.replaceState(null, '/pin', {
-            type: 'infected',
-            title: 'Zombie Pin'
-        });
-    }
-
-
     _renderGameProgress() {
         var percentage = this.state.zombieCount / this.state.survivorCount;
         return (
@@ -130,7 +123,9 @@ class Game extends React.Component {
             <div className="-survivor container">
                 {this._renderCurrentObjective()}
                 <div className="-actions">
-                    <button className='btn btn-default btn-lg' onClick={this._onInfectedClick.bind(this)}>I am infected...</button>
+                    <button type="button" className="btn btn-default btn-lg">
+                        <Link to={`/pin`} query={{type: 'infected', title: 'Zombie Pin'}} state={{modal: true,  returnTo: this.props.location.pathname}}>I am infected...</Link>
+                    </button>
                 </div>
             </div>
         );

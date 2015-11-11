@@ -16,7 +16,7 @@ class Pin extends React.Component {
   }
 
   _onBackClick() {
-    this.props.history.replaceState(null, '/game');
+    this.props.history.replaceState(null, this.props.location.state.returnTo ? this.props.location.state.returnTo : '/game');
   }
 
   _onPinSubmit() {
@@ -27,23 +27,26 @@ class Pin extends React.Component {
   render() {
     var {query} = this.props.location;
 
-    console.log(query);
-
     return (
-      <div className='rc-PinPad'>
-        <button
-          className='btn btn-default'
-          onClick={this._onBackClick.bind(this)}>
-          &laquo; Back
-        </button>
-        <input
-          type="number"
-          className="form-control -pinInput"
-          ref="pin"
-          placeholder={query.title} />
-        <button
-          className='btn btn-success'
-          onClick={this._onPinSubmit.bind(this)}>Submit</button>
+      <div className='rc-PinPad modal' style={{'display': 'block'}}>
+        <div className='modal-dialog'>
+         <div className="modal-content">
+            <div className="modal-header">
+              {query.title}
+              <button onClick={this._onBackClick.bind(this)} type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div className="modal-body">
+              <input
+                type="number"
+                className="form-control -pinInput"
+                ref="pin"
+                placeholder='PIN' />
+              <button
+                className='btn btn-success'
+                onClick={this._onPinSubmit.bind(this)}>Submit</button>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

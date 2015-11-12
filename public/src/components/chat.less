@@ -1,16 +1,43 @@
-.js-chat{
-	position: fixed;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	padding: 10px 0;
-	background: rgba(255, 255, 255, 0.25);
-	.-history {
-		max-height: 5em;
-		overflow-y: scroll;
-		padding: 0 10px;
-	}
-	.-input {
-		margin: 0 10px;
-	}
+
+// Chat LESS
+
+.js-chat {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 10px 0 0;
+
+  .-history {
+    overflow-y: auto;
+    padding: 0 10px;
+    transition: all 200ms ease-in;
+
+    // react mobile click fix
+    cursor: pointer;
+
+    position: absolute;
+    bottom: 42px;
+    width: 100%;
+  }
+
+  &.x-compact {
+    .-history {
+      background-color: rgba(255, 255, 255, 0.25);
+      max-height: 4em;
+    }
+  }
+  &.x-full {
+    top: 52px;
+    .-history {
+      background-color: rgba(255, 255, 255, 0.75);
+      max-height: none;
+      top: 0;
+    }
+  }
+  .-chatForm {
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+  }
 }

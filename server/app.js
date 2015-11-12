@@ -37,7 +37,7 @@ wss.on('connection', function connection(ws) {
           playerName: data.playerName,
           ready: false,
           zombie: false
-        }
+        };
         game.setPlayerData(playerData);
         break;
       case 'unregister':
@@ -49,14 +49,16 @@ wss.on('connection', function connection(ws) {
           fields: {
             ready: data.ready
           }
-        }
+        };
         game.updatePlayerData(data);
 
         break;
       case 'startGame':
         console.log('Received startGame message.');
-        if(game.shouldStartGame()) {
+        if (game.shouldStartGame()) {
           game.startCountdown();
+        } else {
+          game.toggleTimer('lobbyTimer', null, 'kill');
         }
         break;
       case 'chat':
@@ -94,7 +96,7 @@ wss.on('connection', function connection(ws) {
     }
   });
 
-  ws.on('close', function(){
-  	console.log('close!!!');
+  ws.on('close', function () {
+    console.log('close!!!');
   })
 });

@@ -3,6 +3,9 @@
 var React = require('react');
 var ws = require('../ws-utils');
 var _ = require('underscore');
+var classNames = require('classnames');
+
+var Timer = require('./timer');
 
 require('./lobby.less');
 
@@ -23,11 +26,13 @@ class Lobby extends React.Component {
       readyNumber: 0,
       ready: false,
       players: {},
-      countdownTime: undefined
-    }
+      registeredPlayers: {},
+      timeRemaining: 10000
+    };
     ws.readyStateReceiver = this.incomingMsg.bind(this);
     ws.startReceiver = this.startGame.bind(this);
     ws.startCountdownReceiver = this.incomingMsg.bind(this);
+    ws.timerReceiver = this.incomingMsg.bind(this);
   }
 
   incomingMsg (message) {
@@ -41,36 +46,40 @@ class Lobby extends React.Component {
         readyNumber: readyNumber,
         players: message.players
       });
-    } else if (message.type === 'startCountdown') {
-      console.log('startCountdown message: '+JSON.stringify(message));
-      var countdownTime = message.time / 1000;
-      console.log('Computed timer amount: '+JSON.stringify(countdownTime));
+    } else if (message.type === 'timer') {
+      if (message.timerName === 'lobbyTimer') {
 
-      this.startCountdown(countdownTime);
-    }
-  }
+        if (message.time === 0) {
+          this.redirectGame()
+        }
 
-  startCountdown(time) {
-    console.log("startCountdown: "+JSON.stringify(time));
-
-    this.setState({
-      countdownTime: time
-    });
-
-    if (time > 0) {
-      setTimeout(this.startCountdown.bind(this, time - 1), 1000);
+        this.setState({
+          timeRemaining: "" + message.time
+        })
+      }
     }
   }
 
   startGame(message) {
-    var user = Parse.User.current();
-    if (!user) return;
-    var username = user.getUsername();
-    if (message.players[username].zombie) {
-        this.props.history.replaceState(null, '/game', {zombie: true});
-    } else {
-      this.props.history.replaceState(null, '/game');
-    }
+    //var username = user.getUsername();
+    //if (message.players[username].zombie) {
+    //    this.props.history.replaceState(null, '/game', {zombie: true});
+    //} else {
+    //  this.props.history.replaceState(null, '/game');
+    //}
+
+    this.setState({
+      players: message.players
+    });
+  }
+
+  redirectGame() {
+    //var playerName = Parse.User.current().getUsername();
+   if (this.state.players[this.state.playerName].zombie) {
+          this.props.history.replaceState(null, '/zombie');
+      } else {
+        this.props.history.replaceState(null, '/game');
+      }
   }
 
   onReady () {
@@ -94,15 +103,18 @@ class Lobby extends React.Component {
   }
   render() {
     var readyText = this.state.ready ? 'Hold On' : 'Ready Up';
+    var readyButtonType = this.state.ready ? 'btn-default' : 'btn-primary';
     var welcomeText = this.state.ready ? 'You are ready! Let\'s wait for others.' : 'Go hide and get ready!';
 
-    var countdownTimer = this.state.countdownTime === undefined ? '' : (<CountdownTimer countdownTime={this.state.countdownTime} />)
+    var countdownTimer = (this.state.ready && (this.state.timeRemaining / 1000 !== 10)) ? (<Timer timeRemaining={this.state.timeRemaining / 1000} />) : ''
 
     return (
       <div className='sj-lobby container-fluid'>
-        {countdownTimer}
         <div className='text-center'>
-            <button className='btn btn-lg btn-success' onClick={this.onReady.bind(this)}>{readyText}</button>
+          <h1>
+            <button className={classNames('btn btn-lg', readyButtonType)} onClick={this.onReady.bind(this)}>{readyText}</button>
+          <h1>
+          {countdownTimer}
         </div>
         <hr />
         <div className="-players">

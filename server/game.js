@@ -5,6 +5,7 @@ var Game = function(wss) {
 	this.registeredPlayers = {};
   this.countdown = 10000;
   this.gameDuration = 3000000;
+  this.timers = {};
 }
 
 Game.prototype.broadcast = function (data){
@@ -85,14 +86,42 @@ Game.prototype.shouldStartGame = function () {
 }
 
 Game.prototype.startCountdown = function () {
-  this.broadcast({
-    type: 'startCountdown',
-    time: this.countdown
-  });
 
-  setTimeout(function () {
+  this.toggleTimer('lobbyTimer', this.countdown);
+
     this.setInitialZombies();
-  }.bind(this), this.countdown);
 }
+
+Game.prototype.toggleTimer = function (timerName, msRemaining, status) {
+  console.log('toggle timer: ', timerName, msRemaining, status);
+  var self = this;
+
+  if (this.timers[timerName] && status === 'kill') {
+    clearInterval(this.timers[timerName].interval);
+    this.broadcast({
+      type: 'timer',
+      timerName: timerName,
+      time: 0
+    });
+  } else {
+
+    this.timers[timerName] = {
+      msRemaining: msRemaining
+    };
+    this.timers[timerName].interval = setInterval(function () {
+      if (self.timers[timerName].msRemaining >= 0) {
+        self.broadcast({
+          type: 'timer',
+          timerName: timerName,
+          time: self.timers[timerName].msRemaining,
+        });
+        self.timers[timerName].msRemaining -= 1000;
+      } else {
+        clearInterval(self.timers[timerName].interval);
+      }
+    }, 1000);
+  }
+};
+
 
 module.exports = Game;

@@ -2,6 +2,7 @@
 
 var React = require('react');
 var ws = require('../ws-utils');
+var classNames = require('classnames');
 
 var _ = require('underscore');
 
@@ -12,8 +13,9 @@ class Chat extends React.Component {
   constructor() {
     super();
     this.state = {
-        chatHistory: []
-    }
+      chatHistory: [],
+      chatSize: 'compact'
+    };
     ws.chatReceiver = this.incomingMsg.bind(this);
   }
 
@@ -24,16 +26,20 @@ class Chat extends React.Component {
           this.setState({
               chatHistory
           });
+      this.scrollBottomOfChat()
       }
     }
   }
 
   onChatSend() {
+
+
     var input = React.findDOMNode(this.refs.chatInput);
 
     if (input.value && Parse.User.current()) {
-        ws.sendChat(input.value);
+      ws.sendChat(input.value);
     }
+    this.scrollBottomOfChat();
     input.value = '';
     return;
   }
@@ -52,21 +58,39 @@ class Chat extends React.Component {
 
   renderChat() {
     if (this.state.chatHistory.length) {
-        return this.state.chatHistory.map((chat) => {
-            return (
-                <div key={_.uniqueId('chat_')}> {chat.playerName}: {chat.text} </div>
-            )
-        })
+      return this.state.chatHistory.map((chat) => {
+        return (
+            <div key={_.uniqueId('chat_')}> {chat.playerName}: {chat.text} </div>
+        )
+      })
     }
+  }
+
+  toggleChatSize(e) {
+    if (this.state.chatSize === 'compact') {
+      this.toggleChatFull();
+    } else {
+      this.toggleChatCompact();
+    }
+  }
+
+  toggleChatFull() {
+    this.setState({chatSize: 'full'});
+
+  }
+
+  toggleChatCompact() {
+    this.setState({chatSize: 'compact'});
+
   }
 
   renderInput() {
     if (!this.props.zombie) {
       if (Parse.User.current()) {
         return (
-          <form className='-input' onSubmit={this.onChatSend.bind(this)}>
+          <form className='-chatForm' onSubmit={this.onChatSend.bind(this)}>
             <div className="input-group">
-              <input onKeyDown={this.onInputKeyDown.bind(this)} ref='chatInput' type="text" className="form-control" placeholder="Enter message here" />
+              <input onKeyDown={this.onInputKeyDown.bind(this)} ref='chatInput' type="text" className="form-control" placeholder="Chat here.." />
               <span className="input-group-btn">
                 <button className="btn btn-default" type="submit">Send</button>
               </span>
@@ -79,12 +103,12 @@ class Chat extends React.Component {
 
   render() {
     return (
-      <div className='js-chat container-fluid'> 
-        <div className='-history' ref="history">
+        <div className={classNames('js-chat container-fluid', 'x-' + this.state.chatSize)}>
+          <div className='-history' onClick={this.toggleChatSize.bind(this)} ref="history">
             {this.renderChat()}
+          </div>
+          {this.renderInput()}
         </div>
-        {this.renderInput()}
-      </div>
     );
   }
 }

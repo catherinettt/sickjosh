@@ -118,13 +118,22 @@ class Game extends React.Component {
         }
     }
 
+    _notifyInfected() {
+      ws.playerInfected();
+      this._redirect('/zombie');
+    }
+
+    _redirect(path) {
+      this.props.history.replaceState(null, path);
+    }
+
      _renderSurvivorScreen() {
         return (
             <div className="-survivor container">
                 {this._renderCurrentObjective()}
                 <div className="-actions">
-                    <button type="button" className="btn btn-default btn-lg">
-                        <Link to={`/pin`} query={{type: 'infected', title: 'Zombie Pin'}} state={{modal: true,  returnTo: this.props.location.pathname}}>I am infected...</Link>
+                    <button type="button" className="btn btn-default btn-lg" onClick={this._notifyInfected.bind(this)}>
+                        I am infected...
                     </button>
                 </div>
             </div>

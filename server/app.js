@@ -76,6 +76,13 @@ wss.on('connection', function connection(ws) {
         });
       case 'infected':
         console.log(data);
+        var updatePayload = {
+          playerName: data.playerName,
+          fields: {
+            zombie: true
+          }
+        };
+        game.updatePlayerData(updatePayload);
         break;
       default:
         break;

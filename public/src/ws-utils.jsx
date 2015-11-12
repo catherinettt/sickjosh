@@ -107,6 +107,19 @@ ws.startGame = function() {
 	ws.send(JSON.stringify(message));
 }
 
+ws.playerInfected = function() {
+	var user = Parse.User.current();
+	if (!user) return;
+	var name = user.getUsername();
+	console.log(name+" infected");
+	var message = {
+		type: 'infected',
+		playerName: name
+	};
+
+	ws.send(JSON.stringify(message));
+}
+
 ws.sendChat = function(text) {
 	var user = Parse.User.current();
 	if (!user) return;

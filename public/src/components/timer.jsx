@@ -5,53 +5,25 @@ var ws = require('../ws-utils');
 
 import { Router, Route, Link } from 'react-router';
 
-require('./status.less');
+require('./timer.less');
 
-// Examples:
+// Example:
 //<Timer timeRemaining={this.state.timeRemaining / 1000} />
-//<Timer startTime={1000} isActive={false} />
 
 class Timer extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentTime: this.props.startTime || this.props.timeRemaining
-    }
+    console.log('Timer constructor called');
   }
-
-  componentDidMount() {
-    if (this.props.isActive) {
-      setInterval(() => {
-          this.setState({
-            currentTime: (this.state.currentTime - 1)
-          });
-        },
-          1000
-      )
-    }
-  }
-
-  componentWillReceiveProps() {
-    if (this.props.timeRemaining) {
-      this.setState({
-        currentTime: this.props.timeRemaining
-      });
-    }
-  }
-
 
   render() {
+    console.log('Rendering timer with timeRemaining: '+this.props.timeRemaining);
     return (
       <div style={{fontSize: '50px'}}>
-        {this.state.currentTime}
+        {this.props.timeRemaining}
       </div>
     );
   }
 }
-
-
-module.defaultProps = {
-  isActive: false
-};
 
 module.exports = Timer;

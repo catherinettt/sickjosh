@@ -10,6 +10,29 @@ var Chat = require('./chat');
 var Zombie = require('./zombie');
 var Pin = require('./pin');
 
+var GameProgress = React.createClass({
+  render: function() {
+    var percentage = (this.props.zombieCount / (this.props.survivorCount + this.props.zombieCount)) * 100;
+    console.log("Zombie progress: "+percentage);
+    return (
+        <div className='-gameProgress'>
+            <div className="progress">
+              <div className="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" style={{'width': percentage +'%'}}>
+              </div>
+            </div>
+            <div className='-count'>
+                <div className='-survivorCount'>
+                    <span className='glyphicon glyphicon-user'></span> {this.props.survivorCount}
+                </div>
+                <div className='-zombieCount'>
+                    <span className='glyphicon glyphicon-tint'></span> {this.props.zombieCount}
+                </div>
+            </div>
+        </div>
+    );
+  }
+});
+
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -81,26 +104,6 @@ class Game extends React.Component {
       }
     }
 
-    _renderGameProgress() {
-        var percentage = this.state.zombieCount / this.state.survivorCount;
-        return (
-            <div className='-gameProgress'>
-                <div className="progress">
-                  <div className="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style={{'width': percentage +'%'}}>
-                  </div>
-                </div>
-                <div className='-count'>
-                    <div className='-survivorCount'>
-                        <span className='glyphicon glyphicon-user'></span> {this.state.survivorCount}
-                    </div>
-                    <div className='-zombieCount'>
-                        <span className='glyphicon glyphicon-tint'></span> {this.state.zombieCount}
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
     _renderCurrentObjective () {
         var progress = _.size(_.filter(this.state.objectives, function(obj) {
           return obj.get('completed');
@@ -124,7 +127,7 @@ class Game extends React.Component {
                         <button className='btn btn-default btn-lg' onClick={this._showPin.bind(this, query)}>Enter PIN</button>
                     </div>
                 )
-            })  
+            })
         }
     }
 
@@ -157,7 +160,7 @@ class Game extends React.Component {
             return null;
         }
     }
-    
+
     _closePin() {
         this.setState({
             showPIN: false
@@ -177,7 +180,7 @@ class Game extends React.Component {
         return (
           <div>
             <div className='rc-game'>
-                {this._renderGameProgress()}
+                <GameProgress zombieCount={this.state.zombieCount} survivorCount={this.state.survivorCount} />
                 {main}
                 {this._renderPinPad()}
             </div>

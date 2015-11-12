@@ -73,7 +73,7 @@ wss.on('connection', function connection(ws) {
         game.broadcast({
           type: 'newObjective',
           objectiveId: data.objectiveId
-        };
+        });
       case 'infected':
         console.log(data);
         break;

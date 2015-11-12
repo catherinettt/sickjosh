@@ -13,24 +13,39 @@
     padding: 0 10px;
     transition: all 200ms ease-in;
 
+
     // react mobile click fix
     cursor: pointer;
 
     position: absolute;
     bottom: 42px;
     width: 100%;
+
+    .message {
+      .name {
+        color: #777;
+      }
+      .spacer {
+        color: #333;
+      }
+      &.x-player {
+
+      }
+    }
   }
 
   &.x-compact {
     .-history {
-      background-color: rgba(255, 255, 255, 0.25);
-      max-height: 4em;
+      background-color: rgba(0, 0, 0, 0.75);
+      color: #aaa;
+      max-height: 6em;
     }
   }
   &.x-full {
     top: 52px;
     .-history {
-      background-color: rgba(255, 255, 255, 0.75);
+      background-color: rgba(0, 0, 0, 0.93);
+      color: #ccc;
       max-height: none;
       top: 0;
     }

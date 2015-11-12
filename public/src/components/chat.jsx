@@ -60,7 +60,7 @@ class Chat extends React.Component {
     if (this.state.chatHistory.length) {
       return this.state.chatHistory.map((chat) => {
         return (
-            <div key={_.uniqueId('chat_')}> {chat.playerName}: {chat.text} </div>
+            <div key={_.uniqueId('chat_')} className={classNames('message', (chat.playerName === 'ADMIN') ? 'x-admin' : 'x-player')}> <span className='name'>{chat.playerName}</span><span className='spacer'>&nbsp;-&nbsp;</span>{chat.text} </div>
         )
       })
     }
@@ -82,6 +82,8 @@ class Chat extends React.Component {
   toggleChatCompact() {
     this.setState({chatSize: 'compact'});
 
+    // ugly!
+    setTimeout(() => this.scrollBottomOfChat(), 0)
   }
 
   renderInput() {

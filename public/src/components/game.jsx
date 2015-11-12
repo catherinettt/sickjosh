@@ -162,7 +162,7 @@ class Game extends React.Component {
 
      _renderSurvivorScreen() {
         return (
-            <div className="-survivor container">
+            <div className="-survivor container text-center">
                 {this._renderCurrentObjective()}
             </div>
         );

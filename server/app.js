@@ -71,9 +71,14 @@ wss.on('connection', function connection(ws) {
         break;
       case 'setObjective':
         game.broadcast({
-          type: 'newObjective',
-          objectiveId: data.objectiveId
+          type: 'updateObjective'
         });
+        break;
+      case 'updateObjective':
+        game.broadcast({
+          type: 'updateObjective'
+        });
+        break;
       case 'infected':
         console.log(data);
         var updatePayload = {

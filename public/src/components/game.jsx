@@ -1,8 +1,11 @@
 'use strict';
 
 import {Link} from 'react-router'
+
 var React = require('react');
+
 require('./game.less');
+
 var ws = require('../ws-utils');
 var _ = require('underscore');
 
@@ -10,28 +13,60 @@ var Chat = require('./chat');
 var Zombie = require('./zombie');
 var Pin = require('./pin');
 
-var GameProgress = React.createClass({
-  render: function() {
-    var percentage = (this.props.zombieCount / (this.props.survivorCount + this.props.zombieCount)) * 100;
-    console.log("Zombie progress: "+percentage);
+class GameProgress extends React.Component {
+
+  _notifyInfected() {
+    ws.playerInfected();
+    this._redirect('/zombie');
+  }
+
+  _redirect(path) {
+    this.props.history.replaceState(null, path);
+  }
+
+  render() {
+
+    var zombiePercentage = (this.props.zombieCount / (this.props.survivorCount + this.props.zombieCount)) * 100;
+    console.log("Zombie progress: "+ zombiePercentage);
+
+    var objectivePercentage = (this.props.objectivesCompleted / this.props.objectivesTotal.length) * 100;
+    console.log("Objective progress: ", objectivePercentage);
+
     return (
         <div className='-gameProgress'>
-            <div className="progress">
-              <div className="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" style={{'width': percentage +'%'}}>
+          <section className='-players'>
+            <div className='-information x-justify'>
+              <div className='-zombieCount'>
+                <span className='glyphicon glyphicon-tint'></span> {this.props.zombieCount}
+              </div>
+              <div className="-actions">
+                <button type="button" className="btn btn-danger" onClick={this._notifyInfected.bind(this)}>
+                  I've been turned!
+                </button>
+              </div>
+              <div className='-survivorCount'>
+                <span className='glyphicon glyphicon-user'></span> {this.props.survivorCount}
               </div>
             </div>
-            <div className='-count'>
-                <div className='-survivorCount'>
-                    <span className='glyphicon glyphicon-user'></span> {this.props.survivorCount}
-                </div>
-                <div className='-zombieCount'>
-                    <span className='glyphicon glyphicon-tint'></span> {this.props.zombieCount}
-                </div>
+            <div className="progress">
+              <div className="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" style={{'width': zombiePercentage +'%'}}>
+              </div>
             </div>
+          </section>
+          <section className='-objectives'>
+            <div className='-information'>
+              {this.props.objectivesCompleted} of {this.props.objectivesTotal.length} objectives completed
+            </div>
+            <div className="progress x-objectives">
+              <div className="progress-bar progress-bar-primary progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style={{'width': objectivePercentage +'%'}}>
+              </div>
+              <span className="label label-primary -progress"></span>
+            </div>
+          </section>
         </div>
     );
   }
-});
+}
 
 class Game extends React.Component {
     constructor(props) {
@@ -105,10 +140,6 @@ class Game extends React.Component {
     }
 
     _renderCurrentObjective () {
-        var progress = _.size(_.filter(this.state.objectives, function(obj) {
-          return obj.get('completed');
-        }));
-
         var current = _.filter(this.state.objectives, function(obj) {
           return obj.get('active');
         });
@@ -117,38 +148,22 @@ class Game extends React.Component {
                 var query = {
                     type: 'objective',
                     objectiveId: obj.id,
-                    title: 'Objective PIN'
+                    title: 'Objective Code'
                 }
                 return (
                     <div className="-objectives">
-                        <span className="label label-primary"> Objective </span>
-                        <span className="label label-primary -progress">{progress}/{_.size(this.state.objectives)}</span>
                         <p> {obj.get('description')} </p>
-                        <button className='btn btn-default btn-lg' onClick={this._showPin.bind(this, query)}>Enter PIN</button>
+                        <button className='btn btn-default btn-lg' onClick={this._showPin.bind(this, query)}>Enter Code</button>
                     </div>
                 )
             })
         }
     }
 
-    _notifyInfected() {
-      ws.playerInfected();
-      this._redirect('/zombie');
-    }
-
-    _redirect(path) {
-      this.props.history.replaceState(null, path);
-    }
-
      _renderSurvivorScreen() {
         return (
             <div className="-survivor container">
                 {this._renderCurrentObjective()}
-                <div className="-actions">
-                    <button type="button" className="btn btn-default btn-lg" onClick={this._notifyInfected.bind(this)}>
-                        I am infected...
-                    </button>
-                </div>
             </div>
         );
     }
@@ -177,10 +192,15 @@ class Game extends React.Component {
     render() {
         var main = this._renderSurvivorScreen();
 
+        // number of completed objectives
+        var progress = _.size(_.filter(this.state.objectives, function(obj) {
+          return obj.get('completed');
+        }));
+
         return (
           <div>
             <div className='rc-game'>
-                <GameProgress zombieCount={this.state.zombieCount} survivorCount={this.state.survivorCount} />
+                <GameProgress zombieCount={this.state.zombieCount} survivorCount={this.state.survivorCount} objectivesTotal={this.state.objectives} objectivesCompleted={progress} />
                 {main}
                 {this._renderPinPad()}
             </div>

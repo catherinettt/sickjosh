@@ -90,7 +90,7 @@ class Chat extends React.Component {
         return (
           <form className='-chatForm' onSubmit={this.onChatSend.bind(this)}>
             <div className="input-group">
-              <input onKeyDown={this.onInputKeyDown.bind(this)} ref='chatInput' type="text" className="form-control" placeholder="Chat here.." />
+              <input onKeyDown={this.onInputKeyDown.bind(this)} ref='chatInput' type="text" className="form-control" placeholder="Chat..." />
               <span className="input-group-btn">
                 <button className="btn btn-default" type="submit">Send</button>
               </span>

@@ -1,50 +1,61 @@
-.rc-game{
-	position: relative;
-	padding-bottom: 60px;
-	background: gray;
-	.-gameProgress{
-		.progress{
-			border-radius: 0;
-	    	height: 50px;
-	    	opcity: 0.8;
-		}
-		.-count {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			display: flex;
-			justify-content: space-between;
-			line-height: 50px;
-			padding: 0 10px;
-		}
-	}
-	.-survivor{
-		text-align: center;
-		button{
-		    margin: 0.25em auto;
-			display: block;
-		}
-		.-objectives{
-			background-color: rgba(225,225,225, 0.9);
-			border-radius: 0.5em;
-			padding: 0.25em;
-			margin-bottom: 0.5em;
-			position: relative;
-			padding-top: 2.5em;
-			box-shadow: 0px 0px 6px #484848;
-			.label {
-				position: absolute;
-				top: 0.5em;
-				left: 0.75em;
-				&.-progress {
-					left: auto;
-					right: 0.75em;
-				}
-			}
-		}
-		.-actions{
-			margin-top: 1em;
-		}
-	}
+
+// in-game screen
+
+.rc-game {
+  position: relative;
+  padding-bottom: 60px;
+
+
+  .-gameProgress {
+    section + section {
+      margin-bottom: .5em;
+    }
+    .-information {
+      background-color: #ddd;
+      line-height: 45px;
+      padding: 5px 10px 0;
+      text-align: center;
+      box-shadow: inset 0 2px 2px #999;
+
+      &.x-justify {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+    .progress {
+      border-radius: 0;
+      background-color: #bbb;
+      height: 8px;
+      margin-bottom: 0;
+    }
+  }
+  .-survivor {
+    text-align: center;
+    button {
+      margin: 0.25em auto;
+      display: block;
+    }
+    .-objectives {
+      background-color: #ccc;
+      border-radius: 0.15em;
+      padding: .5em 0.25em 0.25em;
+      margin-bottom: 0.5em;
+      position: relative;
+      box-shadow: 0 0 6px #000;
+
+      border-top: 8px solid #337ab7;
+
+      .label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-bottom-left-radius: 0;
+        border-top-right-radius: 0;
+        font-weight: normal;
+      }
+    }
+    .-actions {
+      margin-top: 1em;
+    }
+  }
 }

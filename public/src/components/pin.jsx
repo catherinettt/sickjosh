@@ -76,7 +76,7 @@ class Pin extends React.Component {
                 maxLength={4}
                 placeholder='PIN' />
               <button
-                className='btn btn-success'
+                className='btn btn-success btn-lg btn-block'
                 onClick={this._onPinSubmit.bind(this)}>Submit</button>
             </div>
           </div>

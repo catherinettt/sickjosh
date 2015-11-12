@@ -107,7 +107,7 @@ class Lobby extends React.Component {
     var readyButtonType = this.state.ready ? 'btn-default' : 'btn-primary';
     var welcomeText = this.state.ready ? 'You are ready! Let\'s wait for others.' : 'Go hide and get ready!';
 
-    var countdownTimer = (this.state.ready && (this.state.timeRemaining / 1000 !== 10)) ? (<Timer timeRemaining={this.state.timeRemaining / 1000} />) : ''
+    var countdownTimer = (this.state.timeRemaining / 1000 !== 10) ? (<Timer timeRemaining={this.state.timeRemaining / 1000} />) : ''
 
     return (
       <div>

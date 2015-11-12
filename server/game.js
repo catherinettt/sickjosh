@@ -58,7 +58,7 @@ Game.prototype.setInitialZombies = function(initialNumberOfZombies) {
   var playerNames = _.keys(this.registeredPlayers);
   while(initialNumberOfZombies > 0) {
     var randomZombie = Math.floor(Math.random() * playerNames.length);
-    if (!this.registeredPlayers[playerNames[randomZombie]].zombie) {
+    if (!this.registeredPlayers[playerNames[randomZombie]].zombie && playerNames[randomZombie].toUpperCase() != 'ADMIN') {
       this.registeredPlayers[playerNames[randomZombie]].zombie = true;
       initialNumberOfZombies--;
     }

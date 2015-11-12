@@ -113,7 +113,7 @@ class Lobby extends React.Component {
         <div className='text-center'>
           <h1>
             <button className={classNames('btn btn-lg', readyButtonType)} onClick={this.onReady.bind(this)}>{readyText}</button>
-          <h1>
+          </h1>
           {countdownTimer}
         </div>
         <hr />

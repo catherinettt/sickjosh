@@ -2,7 +2,6 @@
 
 var React = require('react');
 require('./home.less');
-var Chat = require('./chat');
 var Status = require('./status');
 var ws = require('../ws-utils');
 
@@ -37,7 +36,6 @@ class Home extends React.Component {
       <div className='js-home'>
         <Status {...this.props} />
         {this.props.children}
-        <Chat {...this.props} zombie={this.state.zombie}/>
       </div>
     );
   }

@@ -10,10 +10,6 @@ Parse.initialize("7G1t2t49i4pEZtkh7b8KfMUgqxCtJr4uS1YrP1gU", "HVYShhVkTZkj3eQJnN
 var requireAuth = (nextState, replaceState) => {
   if (!Parse.User.current()) {
     replaceState({ nextPathname: nextState.location.pathname }, '/register');
-  } else {
-    setTimeout(() => {
-      ws.registerPlayer();
-    }, 500)
   }
 }
 
@@ -21,6 +17,7 @@ var requireAdmin= (nextState, replaceState) => {
   var user = Parse.User.current();
   if (user) {
     if (user.getUsername() !== 'ADMIN') {
+      console.log("Not admin. Kicking you out.");
       replaceState({ nextPathname: nextState.location.pathname }, '/');
     }
   } else {

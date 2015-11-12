@@ -6,6 +6,7 @@ require('./game.less');
 var ws = require('../ws-utils');
 var _ = require('underscore');
 
+var Chat = require('./chat');
 var Zombie = require('./zombie');
 var Pin = require('./pin');
 
@@ -174,11 +175,14 @@ class Game extends React.Component {
         var main = this._renderSurvivorScreen();
 
         return (
+          <div>
             <div className='rc-game'>
                 {this._renderGameProgress()}
                 {main}
                 {this._renderPinPad()}
             </div>
+            <Chat {...this.props} zombie={this.state.zombie}/>
+          </div>
         )
 
 

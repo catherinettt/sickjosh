@@ -6,6 +6,7 @@ var _ = require('underscore');
 var classNames = require('classnames');
 
 var Timer = require('./timer');
+var Chat = require('./chat');
 
 require('./lobby.less');
 
@@ -109,20 +110,23 @@ class Lobby extends React.Component {
     var countdownTimer = (this.state.ready && (this.state.timeRemaining / 1000 !== 10)) ? (<Timer timeRemaining={this.state.timeRemaining / 1000} />) : ''
 
     return (
-      <div className='sj-lobby container-fluid'>
-        <div className='text-center'>
-          <h1>
-            <button className={classNames('btn btn-lg', readyButtonType)} onClick={this.onReady.bind(this)}>{readyText}</button>
-          </h1>
-          {countdownTimer}
-        </div>
-        <hr />
-        <div className="-players">
-          <h3>Players <span className='pull-right'>{this.state.readyNumber}/{_.size(this.state.players)}</span></h3>
-          <div className='row'>
-           {this.renderPlayers()}
+      <div>
+        <div className='sj-lobby container-fluid'>
+          <div className='text-center'>
+            <h1>
+              <button className={classNames('btn btn-lg', readyButtonType)} onClick={this.onReady.bind(this)}>{readyText}</button>
+            </h1>
+            {countdownTimer}
+          </div>
+          <hr />
+          <div className="-players">
+            <h3>Players <span className='pull-right'>{this.state.readyNumber}/{_.size(this.state.players)}</span></h3>
+            <div className='row'>
+             {this.renderPlayers()}
+            </div>
           </div>
         </div>
+        <Chat {...this.props} zombie={this.state.zombie}/>
       </div>
     );
   }

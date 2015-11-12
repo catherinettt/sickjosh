@@ -4,6 +4,7 @@ var React = require('react');
 var host = window.document.location.host.replace(/:.*/, '');
 var ws = require('../ws-utils');
 
+
 require('./register.less');
 
 class Register extends React.Component {
@@ -70,7 +71,7 @@ class Register extends React.Component {
 
   render() {
     return (
-      <div className='js-register container-fluid'> 
+      <div className='js-register container-fluid'>
         <h2>Player Registration</h2>
         <ul>
           <li>Please use your Hootsuite id</li>

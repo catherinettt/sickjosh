@@ -9,6 +9,8 @@ require('./admin.less')
 var ws = require('../ws-utils');
 var _ = require('underscore');
 
+var Chat = require('./chat');
+
 var GameStatus = React.createClass({
   startGame: function() {
     ws.startGame();
@@ -158,26 +160,29 @@ class Admin extends React.Component {
       totalPlayers: totalPlayers
     }
     return (
-      <div className='js-admin container-fluid'>
-        <GameStatus gameState={gameStatus}></GameStatus>
-        <PlayerList players={players} gameState={gameStatus.status}></PlayerList>
-        <hr />
-        <div className='-objectives'>
-          <h4>Objectives</h4>
-          <table className="table">
-             <thead>
-              <tr>
-                <th>Description</th>
-                <th>Completed</th>
-                <th>PIN</th>
-                <th>Activate</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.renderObjectives()}
-            </tbody>
-          </table>
+      <div>
+        <div className='js-admin container-fluid'>
+          <GameStatus gameState={gameStatus}></GameStatus>
+          <PlayerList players={players} gameState={gameStatus.status}></PlayerList>
+          <hr />
+          <div className='-objectives'>
+            <h4>Objectives</h4>
+            <table className="table">
+               <thead>
+                <tr>
+                  <th>Description</th>
+                  <th>Completed</th>
+                  <th>PIN</th>
+                  <th>Activate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.renderObjectives()}
+              </tbody>
+            </table>
+          </div>
         </div>
+        <Chat {...this.props} zombie={this.state.zombie}/>
       </div>
     );
   }

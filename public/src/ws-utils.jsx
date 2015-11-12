@@ -54,7 +54,7 @@ ws.onmessage = function(e){
 			if (ws.readyStateReceiver) ws.readyStateReceiver(message);
 		}
 
-		if (message.type === 'newObjective') {
+		if (message.type === 'updateObjective') {
 			if (ws.gameReceiver) ws.gameReceiver(message);
 		}
 	}
@@ -139,14 +139,21 @@ ws.unregisterPlayer = function(playerName) {
 	ws.send(JSON.stringify(message));
 }
 
-ws.submitInfection = function (pin) {
+ws.submitPIN = function (data) {
 	var user = Parse.User.current();
 	var message = {
-		type: 'infected',
+		type: 'pinEntry',
 		playerName: user.getUsername(),
-		pin: pin
+		data: data
 	};
 	ws.send(JSON.stringify(message));
 };
+
+ws.objectiveUpdate = function () {
+	var message = {
+		type: 'updateObjective'
+	}
+	ws.send(JSON.stringify(message));
+}
 
 module.exports = ws;

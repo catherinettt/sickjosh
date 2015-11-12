@@ -11,24 +11,57 @@ require('./pin.less');
 class Pin extends React.Component {
   constructor(props) {
     super();
-
-    console.log(props);
   }
 
   _onBackClick() {
-    this.props.history.replaceState(null, this.props.location.state.returnTo ? this.props.location.state.returnTo : '/game');
+    this.props.onClose();
   }
 
   _onPinSubmit() {
     var pin = React.findDOMNode(this.refs.pin).value;
-    ws.submitInfection(pin);
+    var type = this.props.query.type;
+
+    if (pin && type) {
+      var data = {
+        pin: pin,
+        type: type
+      }
+      if (type == 'objective') {
+        data.objectiveId = this.props.query.objectiveId;
+      }
+      // ws.submitPIN(data);
+      this._verifyPin(data)
+    }
+  }
+
+  _verifyPin(data) {
+    if (data.type == 'objective') {
+      var Objective = Parse.Object.extend("Objective");
+      var query = new Parse.Query(Objective);
+      query.equalTo('objectId', data.objectiveId);
+      query.find().then((results) => {
+        if (results.length) {
+          var obj = results[0];
+          if (obj.get('PIN') == data.pin) {
+            if (obj.get('active')) {
+              obj.set('active', false)
+              obj.set('completed', true);
+            }
+            obj.save();
+            ws.objectiveUpdate();
+            this.props.onClose();
+          }
+        }
+      });
+    }
   }
 
   render() {
-    var {query} = this.props.location;
+    var query = this.props.query;
 
     return (
-      <div className='rc-PinPad modal' style={{'display': 'block'}}>
+      <div className='rc-PinPad modal'>
+        <div className='modal-backdrop' onClick={this._onBackClick.bind(this)}></div>
         <div className='modal-dialog'>
          <div className="modal-content">
             <div className="modal-header">
@@ -40,6 +73,7 @@ class Pin extends React.Component {
                 type="number"
                 className="form-control -pinInput"
                 ref="pin"
+                maxLength={4}
                 placeholder='PIN' />
               <button
                 className='btn btn-success'

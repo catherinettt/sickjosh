@@ -7,6 +7,7 @@ var ws = require('../ws-utils');
 var _ = require('underscore');
 
 var Zombie = require('./zombie');
+var Pin = require('./pin');
 
 class Game extends React.Component {
     constructor(props) {
@@ -16,6 +17,7 @@ class Game extends React.Component {
       zombie: query && query.zombie,
       survivorCount: 0,
       zombieCount: 0,
+      showPIN: false,
       objectives: {}
     };
 
@@ -63,7 +65,7 @@ class Game extends React.Component {
                 survivorCount,
                 zombieCount
             });
-        } else if (message.type === 'newObjective') {
+        } else if (message.type === 'updateObjective') {
             this.setObjectives();
         }
 
@@ -103,18 +105,25 @@ class Game extends React.Component {
           return obj.get('completed');
         }));
 
-        var current = _.find(this.state.objectives, function(obj) {
+        var current = _.filter(this.state.objectives, function(obj) {
           return obj.get('active');
         });
-        if (current) {
-            return (
-                <div className="-objectives">
-                    <span className="label label-primary"> Objective </span>
-                    <span className="label label-primary -progress">{progress}/{_.size(this.state.objectives)}</span>
-                    <p> {current.get('description')} </p>
-                    <button className='btn btn-primary btn-lg'>Enter PIN</button>
-                </div>
-            )
+        if (current.length) {
+            return current.map((obj) => {
+                var query = {
+                    type: 'objective',
+                    objectiveId: obj.id,
+                    title: 'Objective PIN'
+                }
+                return (
+                    <div className="-objectives">
+                        <span className="label label-primary"> Objective </span>
+                        <span className="label label-primary -progress">{progress}/{_.size(this.state.objectives)}</span>
+                        <p> {obj.get('description')} </p>
+                        <button className='btn btn-default btn-lg' onClick={this._showPin.bind(this, query)}>Enter PIN</button>
+                    </div>
+                )
+            })  
         }
     }
 
@@ -140,6 +149,27 @@ class Game extends React.Component {
         );
     }
 
+    _renderPinPad() {
+        if (this.state.showPIN) {
+            return (<Pin query={this.state.pinQuery} onClose={this._closePin.bind(this)}/>);
+        } else {
+            return null;
+        }
+    }
+    
+    _closePin() {
+        this.setState({
+            showPIN: false
+        });
+    }
+
+    _showPin(query) {
+        this.setState({
+            showPIN: true,
+            pinQuery: query
+        });
+    }
+
     render() {
         var main = this._renderSurvivorScreen();
 
@@ -147,6 +177,7 @@ class Game extends React.Component {
             <div className='rc-game'>
                 {this._renderGameProgress()}
                 {main}
+                {this._renderPinPad()}
             </div>
         )
 

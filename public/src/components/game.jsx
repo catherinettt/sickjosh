@@ -34,13 +34,13 @@ class Game extends React.Component {
     }
 
     componentDidMount() {
-        setTimeout(() => {
-           if (this.state.survivorCount === 0) {
-                ws.statusPing();
-            }
-        }, 500);
+      setTimeout(() => {
+         if (this.state.survivorCount === 0) {
+              ws.statusPing();
+          }
+      }, 500);
 
-        this.setObjectives();
+      this.setObjectives();
     }
 
     setObjectives() {
@@ -146,7 +146,12 @@ class Game extends React.Component {
         return (
           <div>
             <div className='rc-game'>
-                <GameProgress zombieCount={this.state.zombieCount} survivorCount={this.state.survivorCount} objectivesTotal={this.state.objectives} objectivesCompleted={progress} />
+                <GameProgress 
+                  history={this.props.history} 
+                  zombieCount={this.state.zombieCount} 
+                  survivorCount={this.state.survivorCount} 
+                  objectivesTotal={this.state.objectives} 
+                  objectivesCompleted={progress} />
                 {main}
                 {this._renderPinPad()}
             </div>

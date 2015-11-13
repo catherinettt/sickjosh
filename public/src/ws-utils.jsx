@@ -100,9 +100,17 @@ ws.updatePlayer = function(fields) {
 	ws.send(JSON.stringify(message));
 }
 
-ws.startGame = function() {
+ws.startGame = function(zombieCount) {
 	var message = {
-		type: 'startGame'
+		type: 'startGame',
+		zombieCount 
+	};
+	ws.send(JSON.stringify(message));
+}
+
+ws.endGame = function() {
+	var message = {
+		type: 'endGame'
 	};
 	ws.send(JSON.stringify(message));
 }

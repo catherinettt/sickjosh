@@ -57,12 +57,8 @@ wss.on('connection', function connection(ws) {
 
         break;
       case 'startGame':
-        console.log('Received startGame message.');
-        if (game.shouldStartGame()) {
-          game.startCountdown();
-        } else {
-          game.toggleTimer('lobbyTimer', null, 'kill');
-        }
+        console.log('Received startGame message: ');
+        game.startCountdown(data.zombieCount);
         break;
       case 'chat':
         if (game.registeredPlayers[data.playerName]) {
@@ -98,7 +94,7 @@ wss.on('connection', function connection(ws) {
       case 'endGame': 
         var Game = Parse.Object.extend("Game");
         var query = new Parse.Query(Game);
-        query.first().then((game) => {
+        query.first().then(function(game) {
           if (game) {
             game.set('inProgress', false);
             game.save();

@@ -28,8 +28,12 @@ Game.prototype.getReadyCount = function() {
   }));
 }
 
+Game.prototype.isAdmin = function (playerName) {
+  return playerName.toUpperCase() === 'ADMIN';
+}
+
 Game.prototype.setPlayerData = function(playerData) {
-  if (playerData.playerName !== 'ADMIN') {
+  if (!this.isAdmin(playerData.playerName)) {
       this.registeredPlayers[playerData.playerName] = playerData;
       this.broadcastPlayerUpdate(); 
     }
@@ -58,10 +62,12 @@ Game.prototype.setInitialZombies = function(initialNumberOfZombies) {
     initialNumberOfZombies = 1;
   }
 
+  console.log(initialNumberOfZombies);
+
   var playerNames = _.keys(this.registeredPlayers);
   while(initialNumberOfZombies > 0) {
     var randomZombie = Math.floor(Math.random() * playerNames.length);
-    if (!this.registeredPlayers[playerNames[randomZombie]].zombie && playerNames[randomZombie].toUpperCase() != 'ADMIN') {
+    if (!this.registeredPlayers[playerNames[randomZombie]].zombie && !this.isAdmin(playerNames[randomZombie])) {
       this.registeredPlayers[playerNames[randomZombie]].zombie = true;
       this.registerParseZombie(playerNames[randomZombie]);
       initialNumberOfZombies--;
@@ -114,16 +120,19 @@ Game.prototype.registerParseZombie = function(playerName) {
     query.equalTo('user', player);
     query.first(function(z) {
       // if zombie already exist, just create a new PIN;
-      var PIN = _.random(1000, 9999);
-      z.set('PIN', PIN);
-      z.save();
+      if (z) {
+        var PIN = _.random(1000, 9999);
+        z.set('PIN', PIN);
+        z.save();
+      } else {
+        var newZombie = new Zombie();
+        newZombie.set('user', player);
+        var PIN = _.random(1000, 9999);
+        newZombie.set('PIN', PIN);
+        newZombie.save();
+      }
     }, function(){
-      // else create new zombie;
-      var newZombie = new Zombie();
-      newZombie.set('user', player);
-      var PIN = _.random(1000, 9999);
-      newZombie.set('PIN', PIN);
-      newZombie.save();
+      //
     });
   });
 }
@@ -143,11 +152,11 @@ Game.prototype.shouldStartGame = function () {
   return shouldStart;
 }
 
-Game.prototype.startCountdown = function () {
+Game.prototype.startCountdown = function (zombiesCount) {
 
   this.toggleTimer('lobbyTimer', null, 'kill');
   this.toggleTimer('lobbyTimer', this.countdown);
-  this.setInitialZombies();
+  this.setInitialZombies(zombiesCount);
 }
 
 Game.prototype.toggleTimer = function (timerName, msRemaining, status) {

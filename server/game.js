@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var Parse = require('parse/node');
 
 var Game = function(wss) {
 	this.wss = wss;
@@ -60,6 +61,7 @@ Game.prototype.setInitialZombies = function(initialNumberOfZombies) {
     var randomZombie = Math.floor(Math.random() * playerNames.length);
     if (!this.registeredPlayers[playerNames[randomZombie]].zombie && playerNames[randomZombie].toUpperCase() != 'ADMIN') {
       this.registeredPlayers[playerNames[randomZombie]].zombie = true;
+      this.registerParseZombie(playerNames[randomZombie]);
       initialNumberOfZombies--;
     }
   }
@@ -67,6 +69,50 @@ Game.prototype.setInitialZombies = function(initialNumberOfZombies) {
   this.broadcast({
     type: 'start',
     players: this.registeredPlayers
+  });
+}
+
+Game.prototype.getParseUser = function(playerName){
+  return new Promise(function(resolve, reject) {
+    var query = new Parse.Query(Parse.User);
+    query.equalTo('username', playerName);
+    query.find().then(function(results) {
+      if (results.length) {
+        resolve(results[0])
+      } else {
+        reject()
+      }
+    }, reject);
+  });
+}
+
+Game.prototype.getZombiePINs = function() {
+  return new Promise(function(resolve, reject) {
+    var Zombie = Parse.Object.extend("Zombie");
+    var query = new Parse.Query(Zombie);
+    query.find().then(function(resolve, reject) {
+      if (results.length) {
+        var pins = [];
+        _.each(results, function(z) {
+          pins.push(z.get('PIN'))
+        })
+        resolve(pins);
+      } else {
+        resolve([]);
+      }
+    }, reject)
+  });
+}
+
+
+Game.prototype.registerParseZombie = function(playerName) {
+  this.getParseUser(playerName).then(function(player){ 
+    var Zombie = Parse.Object.extend("Zombie");
+    var newZombie = new Zombie();
+    newZombie.set('user', player);
+    var PIN = _.random(1000, 9999);
+    newZombie.set('PIN', PIN);
+    newZombie.save();
   });
 }
 

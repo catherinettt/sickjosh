@@ -50,6 +50,16 @@ class Game extends React.Component {
         var query = new Parse.Query(Objective);
         query.find().then((results) => {
           if (results.length) {
+            var progress = _.size(_.filter(results, function(obj) {
+              return obj.get('completed');
+            }));
+
+            if (progress === results.length) {
+              this.props.history.replaceState(null, '/summary', {winner: 'human'});
+              ws.endGame('human');
+              return;
+            }
+
             this.setState({
                 objectives: results
             });
@@ -73,7 +83,9 @@ class Game extends React.Component {
                 zombieCount
             });
         } else if (message.type === 'updateObjective') {
-            this.setObjectives();
+          this.setObjectives();
+        } else if (message.type === 'endGame') {
+          this.props.history.replaceState(null, '/summary', {winner: message.winner});
         }
 
         // this.redirectZombie();
@@ -85,7 +97,6 @@ class Game extends React.Component {
       var query = new Parse.Query(Zombie);
       query.equalTo('user', Parse.User.current());
       query.first().then((results) => {
-        debugger;
         if (results) {
           this.props.history.replaceState(null, '/zombie');
         }

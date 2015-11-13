@@ -54,7 +54,7 @@ ws.onmessage = function(e){
 			if (ws.readyStateReceiver) ws.readyStateReceiver(message);
 		}
 
-		if (message.type === 'updateObjective') {
+		if (message.type === 'updateObjective' && message.type === 'endGame') {
 			if (ws.gameReceiver) ws.gameReceiver(message);
 		}
 	}
@@ -152,6 +152,14 @@ ws.submitPIN = function (data) {
 ws.objectiveUpdate = function () {
 	var message = {
 		type: 'updateObjective'
+	}
+	ws.send(JSON.stringify(message));
+}
+
+ws.endGame = function(winner) {
+	var message = {
+		type: 'endGame',
+		winner: winner
 	}
 	ws.send(JSON.stringify(message));
 }

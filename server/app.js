@@ -95,6 +95,20 @@ wss.on('connection', function connection(ws) {
         game.registerParseZombie(data.playerName);
         game.updatePlayerData(updatePayload);
         break;
+      case 'endGame': 
+        var Game = Parse.Object.extend("Game");
+        var query = new Parse.Query(Game);
+        query.first().then((game) => {
+          if (game) {
+            game.set('inProgress', false);
+            game.save();
+          }
+        });
+        game.broadcast({
+          type: 'endGame',
+          winner: data.winner || 'human'
+        });
+        break;
       default:
         break;
     }

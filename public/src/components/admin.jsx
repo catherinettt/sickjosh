@@ -10,40 +10,7 @@ var ws = require('../ws-utils');
 var _ = require('underscore');
 
 var Chat = require('./chat');
-
-var GameStatus = React.createClass({
-  startGame: function() {
-    ws.startGame();
-  },
-
-  render: function() {
-    var statusBar = "";
-    if (this.props.gameState.status == "good") {
-      statusBar = (
-        <div className='-status-lobby'>
-          {this.props.gameState.readyPlayers}/{this.props.gameState.totalPlayers} Players Ready
-          &nbsp;
-          <button className='btn' onClick={this.startGame}>Start Game</button>
-        </div>
-      )
-    } else if (this.props.gameState.status == "active") {
-      statusBar = (
-        <div className='-status-active'>
-          Game Active <button className='btn'>End Game</button>
-        </div>
-      )
-    };
-    return(
-      <div className='-game-status'>
-        <div className='row'>
-          <div className='col-xs-4'>
-            {statusBar}
-          </div>
-        </div>
-      </div>
-    );
-  }
-});
+var GameStatus = require('./game-status');
 
 var PlayerListItem = React.createClass({
   render: function() {
@@ -69,7 +36,7 @@ var PlayerList = React.createClass({
     });
     return (
       <div className='-players'>
-        <h4>Players <small className='pull-right'><span className='glyphicon glyphicon-tint'></span>: infected</small> </h4>
+        <h4>Players ({_.size(this.props.players)})<small className='pull-right'><span className='glyphicon glyphicon-tint'></span>: infected</small> </h4>
         <div className='row'>{playerListItems}</div>
       </div>
     );

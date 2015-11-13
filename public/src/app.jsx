@@ -8,8 +8,11 @@ var ws = require('./ws-utils');
 Parse.initialize("7G1t2t49i4pEZtkh7b8KfMUgqxCtJr4uS1YrP1gU", "HVYShhVkTZkj3eQJnN1ExJgEnxyyS8syiT89X5bP");
 
 var requireAuth = (nextState, replaceState) => {
-  if (!Parse.User.current()) {
+  var user = Parse.User.current();
+  if (!user) {
     replaceState({ nextPathname: nextState.location.pathname }, '/register');
+  } else if (user.getUsername().toUpperCase() === 'ADMIN') {
+    replaceState({ nextPathname: nextState.location.pathname }, '/admin');
   } else {
     setTimeout(function() {
       ws.registerPlayer();
@@ -20,7 +23,7 @@ var requireAuth = (nextState, replaceState) => {
 var requireAdmin= (nextState, replaceState) => {
   var user = Parse.User.current();
   if (user) {
-    if (user.getUsername() !== 'ADMIN') {
+    if (user.getUsername().toUpperCase() !== 'ADMIN') {
       console.log("Not admin. Kicking you out.");
       replaceState({ nextPathname: nextState.location.pathname }, '/');
     }

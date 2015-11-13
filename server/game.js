@@ -110,11 +110,21 @@ Game.prototype.getZombiePINs = function() {
 Game.prototype.registerParseZombie = function(playerName) {
   this.getParseUser(playerName).then(function(player){ 
     var Zombie = Parse.Object.extend("Zombie");
-    var newZombie = new Zombie();
-    newZombie.set('user', player);
-    var PIN = _.random(1000, 9999);
-    newZombie.set('PIN', PIN);
-    newZombie.save();
+    var query = new Parse.Query(Zombie);
+    query.equalTo('user', player);
+    query.first(function(z) {
+      // if zombie already exist, just create a new PIN;
+      var PIN = _.random(1000, 9999);
+      z.set('PIN', PIN);
+      z.save();
+    }, function(){
+      // else create new zombie;
+      var newZombie = new Zombie();
+      newZombie.set('user', player);
+      var PIN = _.random(1000, 9999);
+      newZombie.set('PIN', PIN);
+      newZombie.save();
+    });
   });
 }
 

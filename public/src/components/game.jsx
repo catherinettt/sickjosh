@@ -32,7 +32,9 @@ class Game extends React.Component {
 
       this.redirectZombie();
     }
-
+    componentWillMount () {
+      this.redirectZombie();
+    }
     componentDidMount() {
       setTimeout(() => {
          if (this.state.survivorCount === 0) {
@@ -74,15 +76,20 @@ class Game extends React.Component {
             this.setObjectives();
         }
 
-
-        this.redirectZombie();
+        // this.redirectZombie();
     }
 
     redirectZombie() {
-      if (this.state.zombie) {
+      // redirect to zombie screen if user is a zombie
+      var Zombie = Parse.Object.extend("Zombie");
+      var query = new Parse.Query(Zombie);
+      query.equalTo('user', Parse.User.current());
+      query.first().then((results) => {
+        debugger;
+        if (results) {
           this.props.history.replaceState(null, '/zombie');
-          return;
-      }
+        }
+      });
     }
 
     _renderCurrentObjective () {

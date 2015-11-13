@@ -39,9 +39,8 @@ class Lobby extends React.Component {
   componentWillMount() {
     var Game = Parse.Object.extend("Game");
     var query = new Parse.Query(Game);
-    query.find().then((results) => {
-      if (results.length) {
-        var game = results[0];
+    query.first().then((game) => {
+      if (game) {
         // if in progress go to game
         if (game.get('inProgress')) {
           this.props.history.replaceState(null, '/game');

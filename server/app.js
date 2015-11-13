@@ -6,6 +6,9 @@ var app = express();
 var _ = require('underscore');
 var Game = require('./game');
 
+var Parse = require('parse/node');
+Parse.initialize("7G1t2t49i4pEZtkh7b8KfMUgqxCtJr4uS1YrP1gU", "HVYShhVkTZkj3eQJnN1ExJgEnxyyS8syiT89X5bP");
+
 app.use(express.static('public'));
 app.get('/', function (req, res) {
   res.render('index');

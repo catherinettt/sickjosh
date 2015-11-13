@@ -57,7 +57,7 @@ wss.on('connection', function connection(ws) {
 
         break;
       case 'startGame':
-        console.log('Received startGame message: ');
+        console.log('Received startGame message.');
         game.startCountdown(data.zombieCount);
         break;
       case 'chat':

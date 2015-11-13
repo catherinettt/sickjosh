@@ -62,8 +62,6 @@ Game.prototype.setInitialZombies = function(initialNumberOfZombies) {
     initialNumberOfZombies = 1;
   }
 
-  console.log(initialNumberOfZombies);
-
   var playerNames = _.keys(this.registeredPlayers);
   while(initialNumberOfZombies > 0) {
     var randomZombie = Math.floor(Math.random() * playerNames.length);

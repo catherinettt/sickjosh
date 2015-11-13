@@ -41,6 +41,7 @@ React.render((
       <Route path="zombie" component={require('./components/zombie')} onEnter={requireAuth} />
       <Route path="summary" component={require('./components/summary')} onEnter={requireAuth} />
       <Route path="pin" component={require('./components/pin')} onEnter={requireAuth} />
+      <Route path="tv" component={require('./components/tv')} onEnter={requireAuth} />
       <IndexRoute component={require('./components/lobby')} onEnter={requireAuth} />
     </Route>
   </Router>

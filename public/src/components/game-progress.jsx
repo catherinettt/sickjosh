@@ -9,7 +9,6 @@ var _ = require('underscore');
 class GameProgress extends React.Component {
 
   _notifyInfected() {
-    debugger;
     ws.playerInfected();
     this._redirect('/zombie');
   }

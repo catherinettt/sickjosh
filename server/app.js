@@ -92,6 +92,7 @@ wss.on('connection', function connection(ws) {
             zombie: true
           }
         };
+        game.registerParseZombie(data.playerName);
         game.updatePlayerData(updatePayload);
         break;
       default:

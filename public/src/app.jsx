@@ -10,6 +10,10 @@ Parse.initialize("7G1t2t49i4pEZtkh7b8KfMUgqxCtJr4uS1YrP1gU", "HVYShhVkTZkj3eQJnN
 var requireAuth = (nextState, replaceState) => {
   if (!Parse.User.current()) {
     replaceState({ nextPathname: nextState.location.pathname }, '/register');
+  } else {
+    setTimeout(function() {
+      ws.registerPlayer();
+    }, 0);
   }
 }
 

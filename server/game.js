@@ -10,6 +10,7 @@ var Game = function(wss) {
 }
 
 Game.prototype.broadcast = function (data){
+  console.log('broadcast data: ' + JSON.stringify(data));
   this.wss.clients.forEach(function each(client) {
     client.send(JSON.stringify(data));
   });
@@ -32,21 +33,49 @@ Game.prototype.isAdmin = function (playerName) {
   return playerName.toUpperCase() === 'ADMIN';
 }
 
+// Game.prototype.readySurvivor = function(data) {
+//   var self = this;
+//   this.getParseUser(data.playerName).then(function(player){ 
+//     var Survivor = Parse.Object.extend("Survivor");
+//     var query = new Parse.Query(Survivor);
+//     query.equalTo('user', player);
+//     query.first(function(s) {
+//       if (s) {
+//         s.set('ready', data.fields.ready);
+//         s.save();
+//         self.broadcastPlayerUpdate();
+//       }
+//     }, function(){
+//       //
+//     });
+//   });
+// }
+
 Game.prototype.setPlayerData = function(playerData) {
   if (!this.isAdmin(playerData.playerName)) {
-      this.registeredPlayers[playerData.playerName] = playerData;
-      this.broadcastPlayerUpdate(); 
-    }
+
+    this.registerParseSurvivor(playerData.playerName);
+    this.registeredPlayers[playerData.playerName] = playerData;
+    console.log('setPlayerData registeredPlayers' + JSON.stringify(this.registeredPlayers));
+    this.broadcastPlayerUpdate(); 
   }
+}
+
+
 
 Game.prototype.updatePlayerData = function(data){
   var self = this;
   // data = {playerName: 'abc', fields: {zombie: true}};
   _.each(data.fields, function(value, key) {
-    if (self.registeredPlayers[data.playerName]) {
-      self.registeredPlayers[data.playerName][key] = value;
+    if (!self.registeredPlayers[data.playerName]) {
+      self.registeredPlayers[data.playerName] = {
+        playerName: data.playerName,
+      }
     }
+    self.registeredPlayers[data.playerName][key] = value;
   });
+  console.log('updatePlayerData:' + JSON.stringify(data));
+  console.log('registeredPlayers' + JSON.stringify(this.registeredPlayers));
   this.broadcastPlayerUpdate();
 }
 
@@ -112,11 +141,14 @@ Game.prototype.getZombiePINs = function() {
 
 
 Game.prototype.registerParseZombie = function(playerName) {
+  var self = this;
   this.getParseUser(playerName).then(function(player){ 
     var Zombie = Parse.Object.extend("Zombie");
     var query = new Parse.Query(Zombie);
     query.equalTo('user', player);
     query.first(function(z) {
+      // remove player from Survivor
+      self.removeParseSurvivor(playerName);
       // if zombie already exist, just create a new PIN;
       if (z) {
         var PIN = _.random(1000, 9999);
@@ -128,6 +160,39 @@ Game.prototype.registerParseZombie = function(playerName) {
         var PIN = _.random(1000, 9999);
         newZombie.set('PIN', PIN);
         newZombie.save();
+      }
+    }, function(){
+      //
+    });
+  });
+}
+
+Game.prototype.removeParseSurvivor = function(playerName){
+  this.getParseUser(playerName).then(function(player){ 
+    var Survivor = Parse.Object.extend("Survivor");
+    var query = new Parse.Query(Survivor);
+    query.equalTo('user', player);
+    query.first(function(s) {
+      if (s) {
+        s.destroy();
+      }
+    }, function(){
+      //
+    });
+  });
+}
+
+Game.prototype.registerParseSurvivor = function(playerName) {
+  this.getParseUser(playerName).then(function(player){ 
+    var Survivor = Parse.Object.extend("Survivor");
+    var query = new Parse.Query(Survivor);
+    query.equalTo('user', player);
+    query.first(function(s) {
+      if (!s) {
+        var newSurvivor = new Survivor();
+        newSurvivor.set('user', player);
+        newSurvivor.set('ready', false);
+        newSurvivor.save();
       }
     }, function(){
       //

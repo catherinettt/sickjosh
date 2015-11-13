@@ -54,7 +54,6 @@ wss.on('connection', function connection(ws) {
           }
         };
         game.updatePlayerData(data);
-
         break;
       case 'startGame':
         console.log('Received startGame message.');

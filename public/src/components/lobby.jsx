@@ -28,6 +28,7 @@ class Lobby extends React.Component {
       ready: false,
       players: {},
       registeredPlayers: {},
+      survivors: {},
       timeRemaining: 10000
     };
     ws.readyStateReceiver = this.incomingMsg.bind(this);
@@ -48,6 +49,40 @@ class Lobby extends React.Component {
       }
     });
   }
+
+  componentDidMount() {
+    setTimeout(function() {
+        ws.send(JSON.stringify({
+        'type': 'ready',
+        'playerName':  this.state.playerName,
+        'ready': false
+      }));
+    }.bind(this), 5);
+  }
+
+  // getSurvivors() {
+  //   var self = this;
+  //   var Survivor = Parse.Object.extend('Survivor');
+  //   var query = new Parse.Query(Survivor);
+
+  //   query.find().then((results) => {
+  //     if (results.length) {
+  //       var survivors = {};
+  //       var ready = false;
+  //       _.each(results,(survivor) => {
+  //         var s = {};
+  //         s.playerName = survivor.get('user').get('username');
+  //         // s.ready = survivor.get('ready');
+  //         survivors[s.playerName] = s;
+  //       });
+
+  //       self.setState({
+  //         survivors,
+  //         registeredNumber: _.size(survivors)
+  //       })
+  //     }
+  //   })
+  // }
 
   incomingMsg (message) {
     // var message = JSON.parse(e.data);
@@ -98,7 +133,7 @@ class Lobby extends React.Component {
 
   onReady () {
     ws.readyPlayer(!this.state.ready);
-    this.setState({
+     this.setState({
       ready: !this.state.ready
     })
   }
@@ -133,7 +168,7 @@ class Lobby extends React.Component {
           </div>
           <hr />
           <div className="-players">
-            <h3>Players <span className='pull-right'>{this.state.readyNumber}/{_.size(this.state.players)}</span></h3>
+            <h3>Players <span className='pull-right'>{this.state.readyNumber}/{this.state.registeredNumber}</span></h3>
             <div className='row'>
              {this.renderPlayers()}
             </div>

@@ -16,21 +16,19 @@ var GameProgress = require('./game-progress');
 
 class Game extends React.Component {
     constructor(props) {
-        super(props);
-    var {query} = props.location;
-    this.state = {
-      zombie: query && query.zombie,
-      survivorCount: 0,
-      zombieCount: 0,
-      showPIN: false,
-      objectives: {}
-    };
+      super(props);
+      var {query} = props.location;
+      this.state = {
+        zombie: query && query.zombie,
+        survivorCount: 0,
+        zombieCount: 0,
+        showPIN: false,
+        objectives: {}
+      };
 
-    ws.startReceiver = this.incomingMsg.bind(this);
-    ws.gameReceiver = this.incomingMsg.bind(this);
+      ws.startReceiver = this.incomingMsg.bind(this);
+      ws.gameReceiver = this.incomingMsg.bind(this);
 
-
-      this.redirectZombie();
     }
     componentWillMount () {
       this.redirectZombie();

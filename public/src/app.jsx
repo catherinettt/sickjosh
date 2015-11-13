@@ -13,11 +13,7 @@ var requireAuth = (nextState, replaceState) => {
     replaceState({ nextPathname: nextState.location.pathname }, '/register');
   } else if (user.getUsername().toUpperCase() === 'ADMIN') {
     replaceState({ nextPathname: nextState.location.pathname }, '/admin');
-  } else {
-    setTimeout(function() {
-      ws.registerPlayer();
-    }, 0);
-  }
+  } 
 }
 
 var requireAdmin= (nextState, replaceState) => {

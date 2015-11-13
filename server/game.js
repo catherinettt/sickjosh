@@ -28,9 +28,11 @@ Game.prototype.getReadyCount = function() {
 }
 
 Game.prototype.setPlayerData = function(playerData) {
-  this.registeredPlayers[playerData.playerName] = playerData;
-  this.broadcastPlayerUpdate();
-}
+  if (playerData.playerName !== 'ADMIN') {
+      this.registeredPlayers[playerData.playerName] = playerData;
+      this.broadcastPlayerUpdate(); 
+    }
+  }
 
 Game.prototype.updatePlayerData = function(data){
   var self = this;

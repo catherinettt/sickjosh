@@ -1,0 +1,97 @@
+
+.rc-game {
+  background-color: #ccc;
+}
+.-zombie {
+  padding: 1em 0;
+}
+
+// FLEX UTILITY
+.u-flex {
+  &.x-justify {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.infectionCard {
+  background-color: #fff;
+  text-transform: uppercase;
+  box-shadow: 0 2px 5px rgba(0,0,0,.4);
+
+  .-title {
+    padding: .2em .5em 0;
+    background-color: rgba(180, 50, 50, .8);
+  }
+
+  .-content {
+    padding: 1em 1.5em 0;
+    line-height: 100px;
+
+    .-pincode {
+      font-size: 70px
+    }
+  }
+
+  .-disclaimer {
+    padding: 1em;
+    font-size: 10px;
+  }
+}
+
+
+
+// LOGO
+.overseerLogo {
+  display: inline-block;
+  text-align: center;
+  line-height: normal;
+
+  @baseColour: lighten(#aaa, 10%);
+  @logoSize: 70px;
+
+  .-logo {
+    position: relative;
+    width: @logoSize;
+    height: @logoSize;
+    font-size: @logoSize;
+    display: inline-block;
+    vertical-align: middle;
+
+    background-color: @baseColour;
+    border-radius: 50%;
+
+    .innerIcons(@radius) {
+      font-size: @radius;
+      margin-top: -(@radius/2);
+    }
+
+    .glyphicon {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      text-align: center;
+    }
+
+    .glyphicon-certificate {
+      color: #fff;
+    }
+    .glyphicon-inner {
+      .innerIcons(@logoSize*.6);
+      color: @baseColour;
+      top: 52%;
+    }
+    .glyphicon-top {
+      .innerIcons(@logoSize*.32);
+      color: rgba(0, 0, 0, .25);
+      top: 47%;
+    }
+  }
+  .-text {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    font-size: 10px;
+    line-height: 2;
+    color: @baseColour;
+  }
+}

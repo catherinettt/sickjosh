@@ -92,6 +92,8 @@ class Status extends React.Component {
 
     if (header === '/') {
       header = 'Lobby';
+    } else if (header === '/zombie') {
+      header = 'Infected';
     } else {
       header = header.charAt(1).toUpperCase() + header.substr(2);
     }

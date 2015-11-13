@@ -36,6 +36,20 @@ class Lobby extends React.Component {
     ws.timerReceiver = this.incomingMsg.bind(this);
   }
 
+  componentWillMount() {
+    var Game = Parse.Object.extend("Game");
+    var query = new Parse.Query(Game);
+    query.find().then((results) => {
+      if (results.length) {
+        var game = results[0];
+        // if in progress go to game
+        if (game.get('inProgress')) {
+          this.props.history.replaceState(null, '/game');
+        }
+      }
+    });
+  }
+
   incomingMsg (message) {
     // var message = JSON.parse(e.data);
     if (message.type === 'playerUpdate') {

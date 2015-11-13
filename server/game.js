@@ -135,9 +135,9 @@ Game.prototype.shouldStartGame = function () {
 
 Game.prototype.startCountdown = function () {
 
+  this.toggleTimer('lobbyTimer', null, 'kill');
   this.toggleTimer('lobbyTimer', this.countdown);
-
-    this.setInitialZombies();
+  this.setInitialZombies();
 }
 
 Game.prototype.toggleTimer = function (timerName, msRemaining, status) {

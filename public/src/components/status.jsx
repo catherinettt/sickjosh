@@ -15,7 +15,8 @@ class Status extends React.Component {
         isPinging: false,
         lastPing: 0, 
         delay: 0,
-        pingInterval: null
+        pingInterval: null,
+        showGlobalMenu: false
     }
     ws.statusReceiver = this.incomingMsg.bind(this);
   }
@@ -67,6 +68,12 @@ class Status extends React.Component {
     }.bind(this), 500);
   }
 
+  toggleDropdownMenu() {
+    this.setState({
+      showGlobalMenu: !this.state.showGlobalMenu
+    })
+  }
+
   render() {
 
     var statusIcon, statusColor, header, logoutBtn;
@@ -90,7 +97,16 @@ class Status extends React.Component {
     }
     if (Parse.User.current()) {
       logoutBtn = (
-        <button type="button" onClick={this.logout.bind(this)} className='btn btn-default navbar-btn pull-right'>Logout</button>
+      <div className="globalNavMenu dropdown pull-right">
+        <button className="btn btn-default dropdown-toggle" type="button" onClick={this.toggleDropdownMenu.bind(this)}>
+          <span className="glyphicon glyphicon-menu-hamburger"></span>
+        </button>
+        <ul className="dropdown-menu" style={{'display': this.state.showGlobalMenu ? 'block' : 'none'}} aria-labelledby="dropdownMenu1">
+          <li>
+            <button type="button" onClick={this.logout.bind(this)} className='btn btn-default navbar-btn btn-block'>Logout</button>
+          </li>
+        </ul>
+      </div>
       )
     } 
 

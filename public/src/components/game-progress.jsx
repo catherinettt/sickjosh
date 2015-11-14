@@ -9,16 +9,12 @@ var _ = require('underscore');
 class GameProgress extends React.Component {
 
   _notifyInfected() {
-    ws.playerInfected();
-    this._redirect('/zombie');
-  }
-
-  _redirect(path) {
-    this.props.history.replaceState(null, path);
+    if(_.isFunction(this.props.gotInfected)) {
+      this.props.gotInfected();
+    }
   }
 
   render() {
-
     var zombiePercentage = (this.props.zombieCount / (this.props.survivorCount + this.props.zombieCount)) * 100;
     console.log("Zombie progress: "+ zombiePercentage);
 

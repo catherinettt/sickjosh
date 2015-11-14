@@ -16,19 +16,19 @@ var GameProgress = require('./game-progress');
 
 class Game extends React.Component {
     constructor(props) {
-        super(props);
-    var {query} = props.location;
-    this.state = {
-      zombie: query && query.zombie,
-      survivorCount: 0,
-      zombieCount: 0,
-      showPIN: false,
-      objectives: {}
-    };
+      super(props);
+      var {query} = props.location;
+      this.state = {
+        zombie: query && query.zombie,
+        survivorCount: 0,
+        zombieCount: 0,
+        showPIN: false,
+        objectives: {}
+      };
 
-    ws.startReceiver = this.incomingMsg.bind(this);
-    ws.gameReceiver = this.incomingMsg.bind(this);
-
+      ws.startReceiver = this.incomingMsg.bind(this);
+      ws.gameReceiver = this.incomingMsg.bind(this);
+      this._gotInfected = this._gotInfected.bind(this);
 
       this.redirectZombie();
     }
@@ -153,6 +153,18 @@ class Game extends React.Component {
         });
     }
 
+    _gotInfected() {
+      var query = {
+        type: 'zombie',
+        title: 'Zombie Code',
+        callback: (zombieName) => {
+          ws.playerInfected(zombieName);
+          this.props.history.replaceState(null, '/zombie');
+        }
+      };
+      this._showPin(query);
+    }
+
     render() {
         var main = this._renderSurvivorScreen();
 
@@ -164,11 +176,11 @@ class Game extends React.Component {
         return (
           <div>
             <div className='rc-game'>
-                <GameProgress 
-                  history={this.props.history} 
-                  zombieCount={this.state.zombieCount} 
-                  survivorCount={this.state.survivorCount} 
-                  objectivesTotal={this.state.objectives} 
+                <GameProgress
+                  history={this.props.history}
+                  zombieCount={this.state.zombieCount}
+                  survivorCount={this.state.survivorCount}
+                  objectivesTotal={this.state.objectives}
                   objectivesCompleted={progress} />
                 {main}
                 {this._renderPinPad()}

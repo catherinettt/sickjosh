@@ -20,12 +20,14 @@ class Pin extends React.Component {
   _onPinSubmit() {
     var pin = React.findDOMNode(this.refs.pin).value;
     var type = this.props.query.type;
+    var callback = this.props.query.callback;
 
     if (pin && type) {
       var data = {
         pin: pin,
-        type: type
-      }
+        type: type,
+        callback
+      };
       if (type == 'objective') {
         data.objectiveId = this.props.query.objectiveId;
       }
@@ -52,6 +54,19 @@ class Pin extends React.Component {
             this.props.onClose();
           }
         }
+      });
+    } else if (data.type === 'zombie') {
+      var Zombie = Parse.Object.extend("Zombie");
+      var query = new Parse.Query(Zombie);
+      query.equalTo('PIN', parseInt(data.pin));
+      query.first().then(result => {
+          if (result) {
+            var username = result.get('user').get('username');
+            this.props.onClose();
+            data.callback(username);
+          } else {
+            console.log('Incorrect Zombie PIN');
+          }
       });
     }
   }

@@ -115,14 +115,15 @@ ws.endGame = function() {
 	ws.send(JSON.stringify(message));
 }
 
-ws.playerInfected = function() {
+ws.playerInfected = function(zombieName) {
 	var user = Parse.User.current();
 	if (!user) return;
 	var name = user.getUsername();
 	console.log(name+" infected");
 	var message = {
 		type: 'infected',
-		playerName: name
+		humanName: name,
+		zombieName
 	};
 
 	ws.send(JSON.stringify(message));

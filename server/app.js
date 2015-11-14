@@ -83,12 +83,18 @@ wss.on('connection', function connection(ws) {
       case 'infected':
         console.log(data);
         var updatePayload = {
-          playerName: data.playerName,
+          playerName: data.humanName,
           fields: {
             zombie: true
           }
         };
-        game.registerParseZombie(data.playerName);
+        game.broadcast({
+          type: 'chat',
+          playerName: 'SYSTEM',
+          text: data.humanName + ' got infected by ' + data.zombieName
+        });
+
+        game.registerParseZombie(data.humanName);
         game.updatePlayerData(updatePayload);
         break;
       case 'endGame': 
